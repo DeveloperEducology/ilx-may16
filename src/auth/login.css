@@ -1,0 +1,34 @@
+/* General reset for consistency */
+body {
+    margin: 0;
+    font-family: "Roboto", sans-serif;
+    background-color: #f4f6f8;
+  }
+  
+  /* Style for the signup link */
+  .signup-link {
+    color: #1976d2; /* Matches MUI primary color */
+    text-decoration: none;
+    font-weight: 500;
+  }
+  
+  .signup-link:hover {
+    text-decoration: underline;
+  }
+  
+  /* Optional: Add a subtle animation for buttons */
+  button {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Ensure the container stays centered and responsive */
+  @media (max-width: 600px) {
+    .MuiContainer-maxWidthXs {
+      padding: 0 16px;
+    }
+  }

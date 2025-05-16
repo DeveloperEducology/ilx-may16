@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React Math Equations Preview</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- MathJax CDN -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <!-- React and Babel CDNs -->
+    <script src="https://cdn.jsdelivr.net/npm/react@18/umd/react.development.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+    <div id="root" class="min-h-screen bg-gray-100"></div>
+
+    <script type="text/babel">
+        const EquationCard = ({ title, latex }) => {
+            // Use useEffect to re-render MathJax when component mounts or latex changes
+            React.useEffect(() => {
+                if (window.MathJax) {
+                    window.MathJax.typesetPromise().catch(err => console.error(err));
+                }
+            }, [latex]);
+
+            return (
+                <div className="bg-white shadow-md rounded-lg p-6 mb-6 border-l-4 border-blue-500">
+                    <h3 className="text-lg font-semibold text-gray-800 mb-2">{title}</h3>
+                    <div className="text-center">\[ {latex} \]</div>
+                </div>
+            );
+        };
+
+        const App = () => {
+            const equations = [
+                {
+                    title: "Quadratic Formula",
+                    latex: "x = \\frac{{-b \\pm \\sqrt{{b^2 - 4ac}}}}{2a}"
+                },
+                {
+                    title: "Pythagorean Theorem",
+                    latex: "a^2 + b^2 = c^2"
+                },
+                {
+                    title: "Einstein's Mass-Energy Equivalence",
+                    latex: "E = mc^2"
+                },
+                {
+                    title: "Summation Example",
+                    latex: "\\sum_{n=1}^{\\infty} \\frac{1}{n^2} = \\frac{\\pi^2}{6}"
+                },
+                {
+                    title: "Euler's Formula",
+                    latex: "e^{i\\pi} + 1 = 0"
+                },
+                {
+                    title: "Area of a Circle",
+                    latex: "A = \\pi r^2"
+                },
+                {
+                    title: "Binomial Theorem",
+                    latex: "(a + b)^n = \\sum_{k=0}^{n} \\binom{n}{k} a^{n-k} b^k"
+                },
+                {
+                    title: "Derivative of a Polynomial",
+                    latex: "\\frac{d}{dx} (x^n) = n x^{n-1}"
+                }
+            ];
+
+            return (
+                <div className="container mx-auto p-6">
+                    <h1 className="text-3xl font-bold text-center text-gray-900 mb-8">
+                        Mathematical Equations Preview
+                    </h1>
+                    <div className="max-w-3xl mx-auto">
+                        {equations.map((eq, index) => (
+                            <EquationCard key={index} title={eq.title} latex={eq.latex} />
+                        ))}
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>

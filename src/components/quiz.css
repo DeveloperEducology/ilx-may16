@@ -1,0 +1,308 @@
+/* Container for the entire quiz */
+.quiz-container {
+  padding: 24px;
+  font-family: Arial, sans-serif;
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+
+/* Quiz title */
+.quiz-title {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 16px;
+  color: #333;
+}
+
+/* Question number display */
+.question-number {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #555;
+}
+
+/* Question prompt */
+.question-prompt {
+  font-size: 18px;
+  margin-bottom: 16px;
+  color: #333;
+  line-height: 1.5;
+  white-space: pre-line;
+}
+
+/* Image container for questions with images */
+.image-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.image-container img {
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+  object-fit: contain;
+}
+
+.image-container img:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Single-select and multi-select options */
+.option-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.option-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 16px;
+  color: #333;
+}
+
+.option-radio,
+.option-checkbox {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+.option-indicator {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 16px;
+  color: #666;
+  margin-right: 8px;
+  transition: all 0.3s ease;
+}
+
+.option-radio:checked + .option-indicator,
+.option-checkbox:checked + .option-indicator,
+.option-indicator.selected {
+  border-color: #4caf50;
+  background-color: #4caf50;
+  color: #fff;
+}
+
+.option-radio:focus + .option-indicator,
+.option-checkbox:focus + .option-indicator {
+  outline: 2px solid #4caf50;
+  outline-offset: 2px;
+}
+
+/* Fill-in input fields */
+.fill-in-input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 208px;
+  font-size: 16px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.fill-in-input:focus {
+  outline: none;
+  border-color: #4caf50;
+  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+}
+
+/* Sequence input fields */
+.sequence-input {
+  width: 64px;
+  padding: 4px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 16px;
+  margin: 0 4px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.sequence-input:focus {
+  outline: none;
+  border-color: #4caf50;
+  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+}
+
+/* Sequence option buttons */
+.sequence-option-button {
+  background-color: #e3f2fd;
+  color: #333;
+  padding: 8px 16px;
+  border: 2px solid #bbdefb;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.sequence-option-button:hover {
+  background-color: #bbdefb;
+  transform: translateY(-1px);
+}
+
+.sequence-option-button:active {
+  transform: translateY(0);
+}
+
+.sequence-option-button.selected {
+  background-color: #90caf9;
+}
+
+/* Submit button */
+.submit-button {
+  margin-top: 16px;
+  padding: 8px 24px;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  background-color: #4caf50;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.submit-button:hover {
+  background-color: #45a049;
+  transform: translateY(-1px);
+}
+
+.submit-button:disabled {
+  background-color: #bdbdbd;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Navigation buttons */
+.nav-button {
+  padding: 8px 24px;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  background-color: #2196f3;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.nav-button:hover {
+  background-color: #1976d2;
+  transform: translateY(-1px);
+}
+
+.nav-button:disabled {
+  background-color: #bdbdbd;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Feedback message */
+.feedback-message {
+  margin-top: 16px;
+  font-size: 18px;
+}
+
+.feedback-message.correct {
+  color: #4caf50;
+}
+
+.feedback-message.incorrect {
+  color: #f44336;
+}
+
+/* Sequence output */
+.sequence-output {
+  margin-top: 16px;
+  font-size: 18px;
+}
+
+.sequence-output-span {
+  font-family: monospace;
+  color: #1565c0;
+}
+
+/* HTML content (for questions with HTML sequenceType) */
+.html-content {
+  margin-bottom: 16px;
+}
+
+.html-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+/* Responsive design */
+@media (max-width: 640px) {
+  .quiz-container {
+    padding: 16px;
+    max-width: 100%;
+  }
+
+  .quiz-title {
+    font-size: 24px;
+  }
+
+  .question-number {
+    font-size: 16px;
+  }
+
+  .question-prompt {
+    font-size: 16px;
+  }
+
+  .fill-in-input {
+    width: 100%;
+    max-width: 200px;
+  }
+
+  .sequence-input {
+    width: 48px;
+  }
+
+  .image-container img {
+    width: 120px !important;
+    height: 120px !important;
+  }
+
+  .submit-button,
+  .nav-button {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+
+  .sequence-option-button {
+    padding: 6px 12px;
+    font-size: 14px;
+  }
+}
+
+/* Accessibility improvements */
+:focus-visible {
+  outline: 2px solid #4caf50;
+  outline-offset: 2px;
+}
