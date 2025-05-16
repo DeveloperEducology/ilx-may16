@@ -219,7 +219,7 @@ const Quiz = () => {
             [question._id]: "✅ Correct! Quiz completed!",
           });
         }
-        navigate(`/subjects/${classId}`);
+        // navigate(`/subjects/${classId}`);
       }, 1500);
     }
   };
