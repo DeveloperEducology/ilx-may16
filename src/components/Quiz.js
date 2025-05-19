@@ -233,6 +233,22 @@ const Quiz = () => {
             <p className="mb-4 text-lg whitespace-pre-line">
               {question.prompt}
             </p>
+            {question.imageUrl?.length > 0 && (
+              <div className="mb-4">
+                {question?.imageUrl.map((url, idx) => (
+                  <img
+                    key={idx}
+                    src={url}
+                    alt={`img-${idx}`}
+                    style={
+                      question.style || { maxWidth: "100%", height: "auto" }
+                    }
+                    // className="mx-auto rounded"
+                  />
+                ))}
+              </div>
+            )}
+
             {question.options.map((opt, index) => {
               const isSelected = userAnswers[question._id] === opt;
               const alphabet = String.fromCharCode(65 + index);
@@ -325,13 +341,9 @@ const Quiz = () => {
                     alt={`Question ${currentQuestionIndex + 1} image ${
                       index + 1
                     }`}
-                    className="rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300"
-                    style={{
-                      width: question.style?.width || "150px",
-                      height: question.style?.height || "150px",
-                      maxWidth: "100%",
-                      objectFit: "contain",
-                    }}
+                    style={
+                      question.style || { maxWidth: "100%", height: "auto" }
+                    }
                   />
                 ))}
               </div>
@@ -453,20 +465,17 @@ const Quiz = () => {
 
             {question.imageUrl?.length > 0 && (
               <div className="flex flex-wrap justify-start gap-4 mb-6">
-                {question.imageUrl.map((img, index) => (
+                {question?.imageUrl.map((img, index) => (
                   <img
                     key={index}
                     src={img}
                     alt={`Question ${currentQuestionIndex + 1} image ${
                       index + 1
                     }`}
-                    className="rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300"
-                    style={{
-                      width: question.style?.width || "150px",
-                      height: question.style?.height || "150px",
-                      maxWidth: "100%",
-                      objectFit: "contain",
-                    }}
+                    // className="rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300"
+                    style={
+                      question.style || { maxWidth: "100%", height: "auto" }
+                    }
                   />
                 ))}
               </div>
