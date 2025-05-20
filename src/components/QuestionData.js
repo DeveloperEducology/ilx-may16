@@ -1,10 +1,110 @@
 export const questions = [
-    {
-      id: "f7",
-      type: "fill-in",
-      lessnoId: "681113fea6aafb33e7aed374",
-      sequenceType: "html",
-      prompt: `<p>
+  {
+    type: "fill-in-sequence",
+    lessonId: "6811142da6aafb33e7aed398",
+    prompt: "Count forward by threes from 24..",
+    sequence: [24, null, null],
+    correctAnswers: ["27", "30"],
+  },
+  {
+    type: "fill-in-sequence",
+    lessonId: "6811142da6aafb33e7aed398",
+    prompt: "Count forward by 2 from 20..",
+    sequence: [20, null, null, null],
+    correctAnswers: ["22", "24", "26"],
+  },
+  {
+    type: "fill-in-sequence",
+    lessonId: "6811141aa6aafb33e7aed390",
+    prompt: "Fill the blank.",
+    sequence: [10, 20, null],
+    correctAnswers: ["30"],
+  },
+  {
+    type: "sequence",
+    lessonId: "6811141aa6aafb33e7aed390",
+    text: "Fill the blank with the correct number.",
+    question: ["50 null 70 80 90 100"],
+    correctAnswers: ["60"],
+
+  },
+  {
+    type: "sequence",
+    lessonId: "6811141aa6aafb33e7aed390",
+    text: "Fill the blank with the correct number.",
+    question: ["2 null 4 5 6 7"],
+    correctAnswers: ["3"],
+
+  },
+  {
+    type: "sequence",
+    lessonId: "6811141aa6aafb33e7aed390",
+    text: "Fill the blank with the correct number.",
+    question: ["2 null 6 8 10 12"],
+    correctAnswers: ["4"],
+
+  },
+  {
+    type: "fill-in",
+    lessonId: "681113fea6aafb33e7aed374",
+    sequenceType: "html",
+    prompt: `<p>
+    count the dominoes by 10s
+</p>
+<p>
+    <picture><source srcset="https://ckbox.cloud/2430c95ef44b15251e92/assets/O_1FeK4OcFEB/images/80.webp 80w,https://ckbox.cloud/2430c95ef44b15251e92/assets/O_1FeK4OcFEB/images/160.webp 160w,https://ckbox.cloud/2430c95ef44b15251e92/assets/O_1FeK4OcFEB/images/240.webp 240w,https://ckbox.cloud/2430c95ef44b15251e92/assets/O_1FeK4OcFEB/images/320.webp 320w,https://ckbox.cloud/2430c95ef44b15251e92/assets/O_1FeK4OcFEB/images/400.webp 400w,https://ckbox.cloud/2430c95ef44b15251e92/assets/O_1FeK4OcFEB/images/478.webp 478w" sizes="(max-width: 478px) 100vw, 478px" type="image/webp"><img class="image_resized" style="width:42.54%;" data-ckbox-resource-id="O_1FeK4OcFEB" src="https://ckbox.cloud/2430c95ef44b15251e92/assets/O_1FeK4OcFEB/images/478.png" width="478" height="328"></picture>
+</p>
+<p>
+    How many dominoes are there?
+</p>
+<p>
+    &nbsp;
+</p>`,
+    correctAnswer: "40",
+  },
+
+{
+    type: "fill-in",
+    lessonId: "681113fea6aafb33e7aed374",
+    sequenceType: "html",
+    prompt: " Count the balloons by 5s. how many balloons are there?",
+    correctAnswer: "40",
+    imageUrl: [
+      "https://ckbox.cloud/2430c95ef44b15251e92/assets/x2Uz70Lu4lUt/images/466.webp",
+      "https://ckbox.cloud/2430c95ef44b15251e92/assets/x2Uz70Lu4lUt/images/466.webp",
+      "https://ckbox.cloud/2430c95ef44b15251e92/assets/x2Uz70Lu4lUt/images/466.webp",
+      "https://ckbox.cloud/2430c95ef44b15251e92/assets/x2Uz70Lu4lUt/images/466.webp"
+    ]
+},
+
+
+
+
+  {
+    type: "fill-in",
+    lessnoId: "681113fea6aafb33e7aed374",
+    sequenceType: "html",
+    prompt: `<p>
+    count the dominoes by 10s
+</p>
+<p>
+    <picture><source srcset="https://ckbox.cloud/2430c95ef44b15251e92/assets/O_1FeK4OcFEB/images/80.webp 80w,https://ckbox.cloud/2430c95ef44b15251e92/assets/O_1FeK4OcFEB/images/160.webp 160w,https://ckbox.cloud/2430c95ef44b15251e92/assets/O_1FeK4OcFEB/images/240.webp 240w,https://ckbox.cloud/2430c95ef44b15251e92/assets/O_1FeK4OcFEB/images/320.webp 320w,https://ckbox.cloud/2430c95ef44b15251e92/assets/O_1FeK4OcFEB/images/400.webp 400w,https://ckbox.cloud/2430c95ef44b15251e92/assets/O_1FeK4OcFEB/images/478.webp 478w" sizes="(max-width: 478px) 100vw, 478px" type="image/webp"><img class="image_resized" style="width:42.54%;" data-ckbox-resource-id="O_1FeK4OcFEB" src="https://ckbox.cloud/2430c95ef44b15251e92/assets/O_1FeK4OcFEB/images/478.png" width="478" height="328"></picture>
+</p>
+<p>
+    How many dominoes are there?
+</p>`,
+    correctAnswer: "8",
+    imageUrl: [
+      "https://ckbox.cloud/915813720b45bb024b87/assets/u89BOAn07qVi/images/80.webp",
+      "https://ckbox.cloud/915813720b45bb024b87/assets/u89BOAn07qVi/images/80.webp",
+    ],
+    style: { width: "30%", height: "auto" },
+  },
+  {
+    type: "fill-in",
+    lessnoId: "681113fea6aafb33e7aed374",
+    sequenceType: "html",
+    prompt: `<p>
       <span style="background-color:rgb(255,255,255);color:rgb(0,0,0);font-family:&quot;IXL Verdana&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:16px;"><span class="txt" style="-webkit-text-stroke-width:0px;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;orphans:2;text-align:left;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;vertical-align:middle;white-space:normal;widows:2;word-spacing:0px;" id="yui_3_18_1_1_1747273112622_216">Count</span><span class="txt" style="-webkit-text-stroke-width:0px;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;orphans:2;text-align:left;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;vertical-align:middle;white-space:normal;widows:2;word-spacing:0px;" id="yui_3_18_1_1_1747273112622_217"> the lollipops by </span><span class="decimal-scalar expression number" style="-webkit-text-stroke-width:0px;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;orphans:2;position:relative;text-align:center;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;vertical-align:middle;white-space:normal;widows:2;word-spacing:0px;" data-testid="decimal-scalar" id="yui_3_18_1_1_1747273112622_218">2</span><span class="txt" style="-webkit-text-stroke-width:0px;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;orphans:2;text-align:left;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;vertical-align:middle;white-space:normal;widows:2;word-spacing:0px;" id="yui_3_18_1_1_1747273112622_219">s.</span></span>
   </p>
   <p>
@@ -13,14 +113,18 @@ export const questions = [
   <p>
       <picture><source srcset="https://ckbox.cloud/915813720b45bb024b87/assets/u89BOAn07qVi/images/80.webp 80w,https://ckbox.cloud/915813720b45bb024b87/assets/u89BOAn07qVi/images/160.webp 160w,https://ckbox.cloud/915813720b45bb024b87/assets/u89BOAn07qVi/images/240.webp 240w,https://ckbox.cloud/915813720b45bb024b87/assets/u89BOAn07qVi/images/320.webp 320w,https://ckbox.cloud/915813720b45bb024b87/assets/u89BOAn07qVi/images/376.webp 376w" type="image/webp" sizes="(max-width: 376px) 100vw, 376px"><img class="image_resized" style="width:12.82%;" src="https://ckbox.cloud/915813720b45bb024b87/assets/u89BOAn07qVi/images/376.png" data-ckbox-resource-id="u89BOAn07qVi" width="376" height="420"></picture><picture><source srcset="https://ckbox.cloud/915813720b45bb024b87/assets/u89BOAn07qVi/images/80.webp 80w,https://ckbox.cloud/915813720b45bb024b87/assets/u89BOAn07qVi/images/160.webp 160w,https://ckbox.cloud/915813720b45bb024b87/assets/u89BOAn07qVi/images/240.webp 240w,https://ckbox.cloud/915813720b45bb024b87/assets/u89BOAn07qVi/images/320.webp 320w,https://ckbox.cloud/915813720b45bb024b87/assets/u89BOAn07qVi/images/376.webp 376w" type="image/webp" sizes="(max-width: 376px) 100vw, 376px"><img class="image_resized" style="width:13.22%;" src="https://ckbox.cloud/915813720b45bb024b87/assets/u89BOAn07qVi/images/376.png" data-ckbox-resource-id="u89BOAn07qVi" width="376" height="420"></picture>
   </p>`,
-      correctAnswer: "8",
-    },
-    {
-      
-      type: "fill-in",
-      lessnoId: "681113fea6aafb33e7aed374",
-      sequenceType: "html",
-      prompt: `<p>
+    correctAnswer: "8",
+    imageUrl: [
+      "https://ckbox.cloud/915813720b45bb024b87/assets/u89BOAn07qVi/images/80.webp",
+      "https://ckbox.cloud/915813720b45bb024b87/assets/u89BOAn07qVi/images/80.webp",
+    ],
+    style: { width: "30%", height: "auto" },
+  },
+  {
+    type: "fill-in",
+    lessnoId: "681113fea6aafb33e7aed374",
+    sequenceType: "html",
+    prompt: `<p>
     <span style="background-color:rgb(255,255,255);color:rgb(0,0,0);font-family:&quot;IXL Verdana&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:16px;"><span class="txt" style="-webkit-text-stroke-width:0px;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;orphans:2;text-align:left;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;vertical-align:middle;white-space:normal;widows:2;word-spacing:0px;" id="yui_3_18_1_1_1747373539772_216">Count</span><span class="txt" style="-webkit-text-stroke-width:0px;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;orphans:2;text-align:left;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;vertical-align:middle;white-space:normal;widows:2;word-spacing:0px;" id="yui_3_18_1_1_1747373539772_217"> the almonds by </span><span class="decimal-scalar expression number" style="-webkit-text-stroke-width:0px;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;orphans:2;position:relative;text-align:center;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;vertical-align:middle;white-space:normal;widows:2;word-spacing:0px;" data-testid="decimal-scalar" id="yui_3_18_1_1_1747373539772_218">10</span><span class="txt" style="-webkit-text-stroke-width:0px;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;orphans:2;text-align:left;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;vertical-align:middle;white-space:normal;widows:2;word-spacing:0px;" id="yui_3_18_1_1_1747373539772_219">s.</span></span>
 </p>
 <p>
@@ -29,13 +133,13 @@ export const questions = [
 <p>
     <span style="background-color:rgb(255,255,255);color:rgb(0,0,0);font-family:&quot;IXL Verdana&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:16px;"><span class="txt" style="-webkit-text-stroke-width:0px;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;orphans:2;text-align:left;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;vertical-align:middle;white-space:normal;widows:2;word-spacing:0px;">How many almonds are there?</span></span>
 </p>`,
-      correctAnswer: "8",
-    },
-    {
-      type: "fill-in",
-      lessonId: "681113fea6aafb33e7aed374",
-      sequenceType: "html",
-      prompt: `<p>
+    correctAnswer: "8",
+  },
+  {
+    type: "fill-in",
+    lessonId: "681113fea6aafb33e7aed374",
+    sequenceType: "html",
+    prompt: `<p>
     <span style="background-color:rgb(255,255,255);color:rgb(0,0,0);font-family:&quot;IXL Verdana&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:16px;"><span class="txt" style="-webkit-text-stroke-width:0px;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;orphans:2;text-align:left;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;vertical-align:middle;white-space:normal;widows:2;word-spacing:0px;" id="yui_3_18_1_1_1747370707503_430">Count</span><span class="txt" style="-webkit-text-stroke-width:0px;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;orphans:2;text-align:left;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;vertical-align:middle;white-space:normal;widows:2;word-spacing:0px;" id="yui_3_18_1_1_1747370707503_431"> the jelly beans by </span><span class="decimal-scalar expression number" style="-webkit-text-stroke-width:0px;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;orphans:2;position:relative;text-align:center;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;vertical-align:middle;white-space:normal;widows:2;word-spacing:0px;" data-testid="decimal-scalar" id="yui_3_18_1_1_1747370707503_432">10</span><span class="txt" style="-webkit-text-stroke-width:0px;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;orphans:2;text-align:left;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;vertical-align:middle;white-space:normal;widows:2;word-spacing:0px;" id="yui_3_18_1_1_1747370707503_433">s.</span></span>
 </p>
 <p>
@@ -44,13 +148,13 @@ export const questions = [
 <p>
     <span style="background-color:rgb(255,255,255);color:rgb(0,0,0);font-family:&quot;IXL Verdana&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:16px;"><span class="txt" style="-webkit-text-stroke-width:0px;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;orphans:2;text-align:left;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;vertical-align:middle;white-space:normal;widows:2;word-spacing:0px;">How many jelly beans are there?</span></span>
 </p>`,
-      correctAnswer: "8",
-    },
-    {
-      type: "fill-in",
-      lessnId: "681113fea6aafb33e7aed374",
-      sequenceType: "html",
-      prompt: `<p>
+    correctAnswer: "8",
+  },
+  {
+    type: "fill-in",
+    lessnId: "681113fea6aafb33e7aed374",
+    sequenceType: "html",
+    prompt: `<p>
     <span style="background-color:rgb(255,255,255);color:rgb(0,0,0);font-family:&quot;IXL Verdana&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:16px;"><span class="txt" style="-webkit-text-stroke-width:0px;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;orphans:2;text-align:left;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;vertical-align:middle;white-space:normal;widows:2;word-spacing:0px;" id="yui_3_18_1_1_1747370707503_216">Count</span><span class="txt" style="-webkit-text-stroke-width:0px;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;orphans:2;text-align:left;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;vertical-align:middle;white-space:normal;widows:2;word-spacing:0px;" id="yui_3_18_1_1_1747370707503_217"> the pumpkins by </span><span class="decimal-scalar expression number" style="-webkit-text-stroke-width:0px;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;orphans:2;position:relative;text-align:center;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;vertical-align:middle;white-space:normal;widows:2;word-spacing:0px;" data-testid="decimal-scalar" id="yui_3_18_1_1_1747370707503_218">5</span><span class="txt" style="-webkit-text-stroke-width:0px;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;orphans:2;text-align:left;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;vertical-align:middle;white-space:normal;widows:2;word-spacing:0px;" id="yui_3_18_1_1_1747370707503_219">s.</span></span>
 </p>
 <p>
@@ -59,14 +163,14 @@ export const questions = [
 <p>
     <span style="background-color:rgb(255,255,255);color:rgb(0,0,0);font-family:&quot;IXL Verdana&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:16px;"><span class="txt" style="-webkit-text-stroke-width:0px;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;orphans:2;text-align:left;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;vertical-align:middle;white-space:normal;widows:2;word-spacing:0px;">How many pumpkins are there?</span></span>
 </p>`,
-      correctAnswer: "10",
-    },
-    {
-      id: "f8",
-      type: "fill-in",
-      lessnId: "681113fea6aafb33e7aed374",
-      sequenceType: "html",
-      prompt: `<p>
+    correctAnswer: "10",
+  },
+  {
+    id: "f8",
+    type: "fill-in",
+    lessnId: "681113fea6aafb33e7aed374",
+    sequenceType: "html",
+    prompt: `<p>
       <span style="background-color:rgb(255,255,255);color:rgb(0,0,0);font-family:&quot;IXL Verdana&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:16px;"><span style="-webkit-text-stroke-width:0px;display:inline !important;float:none;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;orphans:2;text-align:left;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;white-space:pre-wrap;widows:2;word-spacing:0px;">Each bush has 3 flowers.</span></span>
   </p>
   <p>
@@ -123,27 +227,27 @@ export const questions = [
           </tbody>
       </table>
   </figure>`,
-      correctAnswer: "9",
-    },
-    {
-      id: "S9",
-      type: "sequence",
-      lessnId: "681113fea6aafb33e7aed374",
-      text: "Fill the blank with the correct letter.",
-      question: ["2 + 3 = null"],
-      correctAnswers: ["5"],
-      options: [],
-      imageUrl: [
-        // "https://www.fastandup.in/nutrition-world/wp-content/uploads/2023/06/fruit-min.png",
-      ],
-      style: { height: "200px", width: "200px" },
-    },
-    {
-      id: "A.12",
-      type: "fill-in-sequence",
-      prompt: "Guess the missing number",
-      sequence: [
-        `<p>
+    correctAnswer: "9",
+  },
+  {
+    id: "S9",
+    type: "sequence",
+    lessnId: "681113fea6aafb33e7aed374",
+    text: "Fill the blank with the correct letter.",
+    question: ["2 + 3 = null"],
+    correctAnswers: ["5"],
+    options: [],
+    imageUrl: [
+      // "https://www.fastandup.in/nutrition-world/wp-content/uploads/2023/06/fruit-min.png",
+    ],
+    style: { height: "200px", width: "200px" },
+  },
+  {
+    id: "A.12",
+    type: "fill-in-sequence",
+    prompt: "Guess the missing number",
+    sequence: [
+      `<p>
       <span style="background-color:rgb(255,255,255);color:rgb(0,0,0);font-family:&quot;IXL Verdana&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:16px;"><span class="txt" style="-webkit-text-stroke-width:0px;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;orphans:2;text-align:left;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;vertical-align:middle;white-space:normal;widows:2;word-spacing:0px;" id="yui_3_18_1_1_1747273112622_216">Count</span><span class="txt" style="-webkit-text-stroke-width:0px;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;orphans:2;text-align:left;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;vertical-align:middle;white-space:normal;widows:2;word-spacing:0px;" id="yui_3_18_1_1_1747273112622_217"> the lollipops by </span><span class="decimal-scalar expression number" style="-webkit-text-stroke-width:0px;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;orphans:2;position:relative;text-align:center;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;vertical-align:middle;white-space:normal;widows:2;word-spacing:0px;" data-testid="decimal-scalar" id="yui_3_18_1_1_1747273112622_218">2</span><span class="txt" style="-webkit-text-stroke-width:0px;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;orphans:2;text-align:left;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;vertical-align:middle;white-space:normal;widows:2;word-spacing:0px;" id="yui_3_18_1_1_1747273112622_219">s.</span></span>
   </p>
   <p>
@@ -152,15 +256,15 @@ export const questions = [
   <p>
       <picture><source srcset="https://ckbox.cloud/915813720b45bb024b87/assets/u89BOAn07qVi/images/80.webp 80w,https://ckbox.cloud/915813720b45bb024b87/assets/u89BOAn07qVi/images/160.webp 160w,https://ckbox.cloud/915813720b45bb024b87/assets/u89BOAn07qVi/images/240.webp 240w,https://ckbox.cloud/915813720b45bb024b87/assets/u89BOAn07qVi/images/320.webp 320w,https://ckbox.cloud/915813720b45bb024b87/assets/u89BOAn07qVi/images/376.webp 376w" type="image/webp" sizes="(max-width: 376px) 100vw, 376px"><img class="image_resized" style="width:12.82%;" src="https://ckbox.cloud/915813720b45bb024b87/assets/u89BOAn07qVi/images/376.png" data-ckbox-resource-id="u89BOAn07qVi" width="376" height="420"></picture><picture><source srcset="https://ckbox.cloud/915813720b45bb024b87/assets/u89BOAn07qVi/images/80.webp 80w,https://ckbox.cloud/915813720b45bb024b87/assets/u89BOAn07qVi/images/160.webp 160w,https://ckbox.cloud/915813720b45bb024b87/assets/u89BOAn07qVi/images/240.webp 240w,https://ckbox.cloud/915813720b45bb024b87/assets/u89BOAn07qVi/images/320.webp 320w,https://ckbox.cloud/915813720b45bb024b87/assets/u89BOAn07qVi/images/376.webp 376w" type="image/webp" sizes="(max-width: 376px) 100vw, 376px"><img class="image_resized" style="width:13.22%;" src="https://ckbox.cloud/915813720b45bb024b87/assets/u89BOAn07qVi/images/376.png" data-ckbox-resource-id="u89BOAn07qVi" width="376" height="420"></picture>
   </p>`,
-      ],
-      sequenceType: "html",
-      correctAnswers: ["8"],
-    },
-    {
-      id: "A.13",
-      type: "fill-in",
-  
-      prompt: `<p>
+    ],
+    sequenceType: "html",
+    correctAnswers: ["8"],
+  },
+  {
+    id: "A.13",
+    type: "fill-in",
+
+    prompt: `<p>
       <span style="background-color:rgb(255,255,255);color:rgb(0,0,0);font-family:&quot;IXL Verdana&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:16px;"><span class="txt" style="-webkit-text-stroke-width:0px;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;orphans:2;text-align:left;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;vertical-align:middle;white-space:normal;widows:2;word-spacing:0px;" id="yui_3_18_1_1_1747273769756_343">Count</span><span class="txt" style="-webkit-text-stroke-width:0px;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;orphans:2;text-align:left;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;vertical-align:middle;white-space:normal;widows:2;word-spacing:0px;" id="yui_3_18_1_1_1747273769756_344"> the fire trucks by </span><span class="decimal-scalar expression number" style="-webkit-text-stroke-width:0px;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;orphans:2;position:relative;text-align:center;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;vertical-align:middle;white-space:normal;widows:2;word-spacing:0px;" data-testid="decimal-scalar" id="yui_3_18_1_1_1747273769756_345">5</span><span class="txt" style="-webkit-text-stroke-width:0px;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;orphans:2;text-align:left;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;vertical-align:middle;white-space:normal;widows:2;word-spacing:0px;" id="yui_3_18_1_1_1747273769756_346">s.</span></span>
   </p>
   <p>
@@ -169,16 +273,16 @@ export const questions = [
   <p>
       <span style="background-color:rgb(255,255,255);color:rgb(0,0,0);font-family:&quot;IXL Verdana&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:16px;"><span class="txt" style="-webkit-text-stroke-width:0px;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;orphans:2;text-align:left;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;vertical-align:middle;white-space:normal;widows:2;word-spacing:0px;">How many fire trucks are there?</span></span>
   </p>`,
-      sequenceType: "html",
-      correctAnswer: "15",
-    },
-    {
-      id: "A.14",
-      type: "fill-in-sequence",
-      lessnId: "681113fea6aafb33e7aed374",
-      prompt: "Guess the missing number",
-      sequence: [
-        `<p>
+    sequenceType: "html",
+    correctAnswer: "15",
+  },
+  {
+    id: "A.14",
+    type: "fill-in-sequence",
+    lessnId: "681113fea6aafb33e7aed374",
+    prompt: "Guess the missing number",
+    sequence: [
+      `<p>
       <span style="background-color:rgb(255,255,255);color:rgb(0,0,0);font-family:&quot;IXL Verdana&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:16px;"><span class="txt" style="-webkit-text-stroke-width:0px;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;orphans:2;text-align:left;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;vertical-align:middle;white-space:normal;widows:2;word-spacing:0px;" id="yui_3_18_1_1_1747273769756_343">Count</span><span class="txt" style="-webkit-text-stroke-width:0px;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;orphans:2;text-align:left;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;vertical-align:middle;white-space:normal;widows:2;word-spacing:0px;" id="yui_3_18_1_1_1747273769756_344"> the fire trucks by </span><span class="decimal-scalar expression number" style="-webkit-text-stroke-width:0px;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;orphans:2;position:relative;text-align:center;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;vertical-align:middle;white-space:normal;widows:2;word-spacing:0px;" data-testid="decimal-scalar" id="yui_3_18_1_1_1747273769756_345">5</span><span class="txt" style="-webkit-text-stroke-width:0px;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;orphans:2;text-align:left;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;vertical-align:middle;white-space:normal;widows:2;word-spacing:0px;" id="yui_3_18_1_1_1747273769756_346">s.</span></span>
   </p>
   <p>
@@ -187,101 +291,101 @@ export const questions = [
   <p>
       <span style="background-color:rgb(255,255,255);color:rgb(0,0,0);font-family:&quot;IXL Verdana&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:16px;"><span class="txt" style="-webkit-text-stroke-width:0px;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;orphans:2;text-align:left;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;vertical-align:middle;white-space:normal;widows:2;word-spacing:0px;">How many fire trucks are there?</span></span>
   </p>`,
-      ],
-      sequenceType: "html",
-      correctAnswers: ["15"],
-    },
-    {
-      id: "S3",
-      type: "fill-in-sequence",
-      prompt: "Fill the blank.",
-      sequence: [10, 20, null],
-      correctAnswers: ["30"],
-    },
-    {
-      id: "Q0",
-      type: "single-select",
-      lessnId: "681113fea6aafb33e7aed374",
-      prompt:
-        "Assertion (A): Water boils at 100°C at sea level.\nReason (R): Atmospheric pressure affects the boiling point of liquids.",
-      options: [
-        "Both A and R are true and R is the correct explanation of A.",
-        "Both A and R are true but R is not the correct explanation of A.",
-        "A is true but R is false.",
-        "A is false but R is true.",
-        "Both A and R are false.",
-      ],
-      correctAnswerIndex: 0,
-    },
-    {
-      id: "Q1",
-      type: "single-select",
-      prompt: "What is the capital of France?",
-      options: ["Berlin", "Madrid", "Paris", "London"],
-      correctAnswerIndex: 2,
-    },
-    {
-      id: "Q2",
-      type: "multi-select",
-      prompt: "Select all prime numbers:",
-      options: ["2", "3", "4", "5"],
-      correctAnswerIndices: [0, 1, 3],
-    },
-    {
-      id: "Q2-2",
-      type: "multi-select",
-      prompt: "Select correct values:",
-      options: ["2+2=4", "3+3=6", "4+4=6", "5+5=10"],
-      correctAnswerIndices: [0, 1, 3],
-    },
-    {
-      id: "Q3",
-      type: "fill-in",
-      prompt: "The chemical symbol for water is ___",
-      correctAnswer: "H2O",
-    },
-    {
-      id: "A.4",
-      type: "fill-in-sequence",
-      prompt: "Guess the missing number",
-      sequence: [1, 4, null, 16],
-      sequenceType: "plainText",
-      correctAnswers: ["9"],
-    },
-    {
-      id: "A.5",
-      type: "fill-in",
-      prompt: "1, 3, 5, ?",
-      correctAnswer: "7",
-    },
-    {
-      id: "A.6",
-      type: "fill-in-sequence",
-      prompt: "write after number and before number",
-      sequence: [null, 3, null],
-      sequenceType: "plainText",
-      correctAnswers: ["2", "4"],
-    },
-    {
-      id: "A.8",
-      type: "fill-in-sequence",
-      prompt: "Guess the missing number",
-      sequence: [
-        `<p><strong>Guess the sequence</strong></p>
+    ],
+    sequenceType: "html",
+    correctAnswers: ["15"],
+  },
+  {
+    id: "S3",
+    type: "fill-in-sequence",
+    prompt: "Fill the blank.",
+    sequence: [10, 20, null],
+    correctAnswers: ["30"],
+  },
+  {
+    id: "Q0",
+    type: "single-select",
+    lessnId: "681113fea6aafb33e7aed374",
+    prompt:
+      "Assertion (A): Water boils at 100°C at sea level.\nReason (R): Atmospheric pressure affects the boiling point of liquids.",
+    options: [
+      "Both A and R are true and R is the correct explanation of A.",
+      "Both A and R are true but R is not the correct explanation of A.",
+      "A is true but R is false.",
+      "A is false but R is true.",
+      "Both A and R are false.",
+    ],
+    correctAnswerIndex: 0,
+  },
+  {
+    id: "Q1",
+    type: "single-select",
+    prompt: "What is the capital of France?",
+    options: ["Berlin", "Madrid", "Paris", "London"],
+    correctAnswerIndex: 2,
+  },
+  {
+    id: "Q2",
+    type: "multi-select",
+    prompt: "Select all prime numbers:",
+    options: ["2", "3", "4", "5"],
+    correctAnswerIndices: [0, 1, 3],
+  },
+  {
+    id: "Q2-2",
+    type: "multi-select",
+    prompt: "Select correct values:",
+    options: ["2+2=4", "3+3=6", "4+4=6", "5+5=10"],
+    correctAnswerIndices: [0, 1, 3],
+  },
+  {
+    id: "Q3",
+    type: "fill-in",
+    prompt: "The chemical symbol for water is ___",
+    correctAnswer: "H2O",
+  },
+  {
+    id: "A.4",
+    type: "fill-in-sequence",
+    prompt: "Guess the missing number",
+    sequence: [1, 4, null, 16],
+    sequenceType: "plainText",
+    correctAnswers: ["9"],
+  },
+  {
+    id: "A.5",
+    type: "fill-in",
+    prompt: "1, 3, 5, ?",
+    correctAnswer: "7",
+  },
+  {
+    id: "A.6",
+    type: "fill-in-sequence",
+    prompt: "write after number and before number",
+    sequence: [null, 3, null],
+    sequenceType: "plainText",
+    correctAnswers: ["2", "4"],
+  },
+  {
+    id: "A.8",
+    type: "fill-in-sequence",
+    prompt: "Guess the missing number",
+    sequence: [
+      `<p><strong>Guess the sequence</strong></p>
           <table border="2">
             <tr><td>1</td><td>2</td><td>3</td><td>4</td></tr>
             <tr><td>1</td><td>4</td><td style="color:red;">?</td><td>25</td></tr>
           </table>`,
-      ],
-      sequenceType: "html",
-      correctAnswers: ["9"],
-    },
-    {
-      id: "A.10",
-      type: "fill-in-sequence",
-      prompt: "Assertion and reasoning",
-      sequence: [
-        `<div style="-webkit-text-stroke-width:0px;background-color:rgb(248, 248, 248);box-sizing:border-box;color:rgb(102, 102, 102);font-family:roboto-regular;font-size:16px;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:300;letter-spacing:normal;line-height:27px;margin-bottom:10px;orphans:2;outline:none;text-align:start;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;white-space:normal;widows:2;word-spacing:0px;">
+    ],
+    sequenceType: "html",
+    correctAnswers: ["9"],
+  },
+  {
+    id: "A.10",
+    type: "fill-in-sequence",
+    prompt: "Assertion and reasoning",
+    sequence: [
+      `<div style="-webkit-text-stroke-width:0px;background-color:rgb(248, 248, 248);box-sizing:border-box;color:rgb(102, 102, 102);font-family:roboto-regular;font-size:16px;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:300;letter-spacing:normal;line-height:27px;margin-bottom:10px;orphans:2;outline:none;text-align:start;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;white-space:normal;widows:2;word-spacing:0px;">
             <span style="font-family:Tahoma, Geneva, sans-serif;"><strong><sup>In each of the questions given below, there are two statements marked as Assertion (A) and Reason (R). Mark your answer as per the codes provided below:</sup></strong></span>
         </div>
         <p>
@@ -305,104 +409,103 @@ export const questions = [
                 Both A and R are false
             </li>
         </ol>`,
-      ],
-      sequenceType: "html",
-      correctAnswers: ["1"],
-    },
-    {
-      id: "S1",
-      type: "fill-in",
-      prompt: "How many apples are there in the basket?",
-      correctAnswer: "10",
-      options: [],
-      imageUrl: [
-        "https://m.media-amazon.com/images/I/81MbS41+wFL._AC_UF894,1000_QL80_.jpg",
-      ],
-      style: { height: "300px", width: "300px" },
-    },
-    {
-      id: "S2",
-      type: "sequence",
-      text: "Fill the blank.",
-      question: ["There are null apples in a tray, null are red, null are green"],
-      correctAnswers: ["10", "5", "5"],
-      options: [],
-      imageUrl: [
-        "https://m.media-amazon.com/images/I/81MbS41+wFL._AC_UF894,1000_QL80_.jpg",
-      ],
-      style: { height: "300px", width: "300px" },
-    },
-    {
-      id: "S4",
-      type: "sequence",
-      text: "Fill the blank.",
-      question: [
-        "There are null days in a week",
-        "There are null months in a year",
-      ],
-      correctAnswers: ["7", "12"],
-      options: [],
-      imageUrl: [],
-      style: { height: "300px", width: "300px" },
-    },
-    {
-      id: "S5",
-      type: "sequence",
-      text: "Fill the blank.",
-      clue: "chocolate",
-      question: ["ch null c null l null t null"],
-      correctAnswers: ["o", "o", "a", "e"],
-      options: [],
-      imageUrl: [
-        "https://upload.wikimedia.org/wikipedia/commons/1/11/Three_Bars_%281%29.jpg",
-      ],
-      style: { height: "300px", width: "300px" },
-    },
-    {
-      id: "S6",
-      type: "sequence",
-      text: "Fill the blank.",
-      clue: "leopard",
-      question: ["l null null p null rd"],
-      correctAnswers: ["e", "o", "a"],
-      options: [],
-      imageUrl: [
-        "https://www.krugerpark.co.za/images/leopard-kruger-rh-786x500.jpg",
-      ],
-      style: { height: "200px", width: "200px" },
-    },
-    {
-      id: "S7",
-      type: "sequence",
-      text: "Fill the blank with the correct letter.",
-      clue: "airplane",
-      question: ["a null rpl null n null"],
-      correctAnswers: ["i", "a", "e"],
-      options: ["i", "a", "e"],
-      imageUrl: ["https://i.ytimg.com/vi/5gHYQto803E/maxresdefault.jpg"],
-      style: { height: "200px", width: "200px" },
-    },
-    {
-      id: "S8",
-      type: "sequence",
-      text: "Fill the blank with the correct letter.",
-      question: ["a big p null g"],
-      correctAnswers: ["i"],
-      options: ["a", "e", "o", "i"],
-      imageUrl: [],
-      style: { height: "200px", width: "200px" },
-    },
-    {
-      id: "S9",
-      type: "sequence",
-      text: "Fill the blank with the correct letter.",
-      question: ["null null ui null null"],
-      correctAnswers: ["f", "r", "t", "s"],
-      options: [],
-      imageUrl: [
-        "https://www.fastandup.in/nutrition-world/wp-content/uploads/2023/06/fruit-min.png",
-      ],
-      style: { height: "200px", width: "200px" },
-    },
-  ];
-  
+    ],
+    sequenceType: "html",
+    correctAnswers: ["1"],
+  },
+  {
+    id: "S1",
+    type: "fill-in",
+    prompt: "How many apples are there in the basket?",
+    correctAnswer: "10",
+    options: [],
+    imageUrl: [
+      "https://m.media-amazon.com/images/I/81MbS41+wFL._AC_UF894,1000_QL80_.jpg",
+    ],
+    style: { height: "300px", width: "300px" },
+  },
+  {
+    id: "S2",
+    type: "sequence",
+    text: "Fill the blank.",
+    question: ["There are null apples in a tray, null are red, null are green"],
+    correctAnswers: ["10", "5", "5"],
+    options: [],
+    imageUrl: [
+      "https://m.media-amazon.com/images/I/81MbS41+wFL._AC_UF894,1000_QL80_.jpg",
+    ],
+    style: { height: "300px", width: "300px" },
+  },
+  {
+    id: "S4",
+    type: "sequence",
+    text: "Fill the blank.",
+    question: [
+      "There are null days in a week",
+      "There are null months in a year",
+    ],
+    correctAnswers: ["7", "12"],
+    options: [],
+    imageUrl: [],
+    style: { height: "300px", width: "300px" },
+  },
+  {
+    id: "S5",
+    type: "sequence",
+    text: "Fill the blank.",
+    clue: "chocolate",
+    question: ["ch null c null l null t null"],
+    correctAnswers: ["o", "o", "a", "e"],
+    options: [],
+    imageUrl: [
+      "https://upload.wikimedia.org/wikipedia/commons/1/11/Three_Bars_%281%29.jpg",
+    ],
+    style: { height: "300px", width: "300px" },
+  },
+  {
+    id: "S6",
+    type: "sequence",
+    text: "Fill the blank.",
+    clue: "leopard",
+    question: ["l null null p null rd"],
+    correctAnswers: ["e", "o", "a"],
+    options: [],
+    imageUrl: [
+      "https://www.krugerpark.co.za/images/leopard-kruger-rh-786x500.jpg",
+    ],
+    style: { height: "200px", width: "200px" },
+  },
+  {
+    id: "S7",
+    type: "sequence",
+    text: "Fill the blank with the correct letter.",
+    clue: "airplane",
+    question: ["a null rpl null n null"],
+    correctAnswers: ["i", "a", "e"],
+    options: ["i", "a", "e"],
+    imageUrl: ["https://i.ytimg.com/vi/5gHYQto803E/maxresdefault.jpg"],
+    style: { height: "200px", width: "200px" },
+  },
+  {
+    id: "S8",
+    type: "sequence",
+    text: "Fill the blank with the correct letter.",
+    question: ["a big p null g"],
+    correctAnswers: ["i"],
+    options: ["a", "e", "o", "i"],
+    imageUrl: [],
+    style: { height: "200px", width: "200px" },
+  },
+  {
+    id: "S9",
+    type: "sequence",
+    text: "Fill the blank with the correct letter.",
+    question: ["null null ui null null"],
+    correctAnswers: ["f", "r", "t", "s"],
+    options: [],
+    imageUrl: [
+      "https://www.fastandup.in/nutrition-world/wp-content/uploads/2023/06/fruit-min.png",
+    ],
+    style: { height: "200px", width: "200px" },
+  },
+];

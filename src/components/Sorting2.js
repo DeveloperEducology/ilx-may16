@@ -1,15 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
 
-
-
-
-
-
-
-
-  const questions = [
-      {
+const questions = [
+  {
     instruction: "Sort the words by their vowel sounds.",
+    lessonId: "681aecf9fb88a0487b80fbaa",
     words: ["due", "dump", "cute", "clue", "cube"],
     answers: {
       "Short u": ["dump"],
@@ -23,6 +17,7 @@ import React, { useState, useRef, useEffect } from "react";
     },
   },
   {
+    lessonId: "681aecf9fb88a0487b80fbaa",
     instruction: "Sort these animals by habitat.",
     words: ["dolphin", "bear", "shark", "fox", "whale"],
     answers: {
@@ -35,149 +30,155 @@ import React, { useState, useRef, useEffect } from "react";
         "Not quite. Dolphins, sharks and whales live in the ocean, while bears and foxes live on land.",
     },
   },
-    {
-      "instruction": "Sort these words by parts of speech.",
-      "words": ["run", "happy", "quickly", "jump", "beautiful"],
-      "answers": {
-        "Verbs": ["run", "jump"],
-        "Adjectives": ["happy", "beautiful"],
-        "Adverbs": ["quickly"]
-      },
-      "feedback": {
-        "correct": "Perfect! You've mastered parts of speech!",
-        "incorrect": "Review needed: 'run' and 'jump' are verbs, 'happy' and 'beautiful' are adjectives, and 'quickly' is an adverb."
-      }
+  {
+    lessonId: "681aecf9fb88a0487b80fbaa",
+    instruction: "Sort these words by parts of speech.",
+    words: ["run", "happy", "quickly", "jump", "beautiful"],
+    answers: {
+      Verbs: ["run", "jump"],
+      Adjectives: ["happy", "beautiful"],
+      Adverbs: ["quickly"],
     },
-    {
-      "instruction": "Sort these animals by habitat.",
-      "words": ["dolphin", "bear", "shark", "fox", "whale"],
-      "answers": {
-        "Ocean": ["dolphin", "shark", "whale"],
-        "Land": ["bear", "fox"]
-      },
-      "feedback": {
-        "correct": "Excellent! You know your animal habitats well!",
-        "incorrect": "Not quite. Dolphins, sharks and whales live in the ocean, while bears and foxes live on land."
-      }
+    feedback: {
+      correct: "Perfect! You've mastered parts of speech!",
+      incorrect:
+        "Review needed: 'run' and 'jump' are verbs, 'happy' and 'beautiful' are adjectives, and 'quickly' is an adverb.",
     },
-    {
-      "instruction": "Sort these words by vowel sounds.",
-      "words": ["cat", "cake", "cut", "cot", "cute"],
-      "answers": {
-        "Short a": ["cat"],
-        "Long a": ["cake"],
-        "Short u": ["cut"],
-        "Short o": ["cot"],
-        "Long u": ["cute"]
-      },
-      "feedback": {
-        "correct": "Great job! You've nailed the vowel sounds!",
-        "incorrect": "Remember: 'cat' (short a), 'cake' (long a), 'cut' (short u), 'cot' (short o), 'cute' (long u)."
-      }
-    },
-    {
-      "instruction": "Sort these words by their endings.",
-      "words": ["running", "happiness", "quickly", "jumper", "beautiful"],
-      "answers": {
-        "-ing": ["running"],
-        "-ness": ["happiness"],
-        "-ly": ["quickly"],
-        "-er": ["jumper"],
-        "-ful": ["beautiful"]
-      },
-      "feedback": {
-        "correct": "Awesome! You recognized all the word endings!",
-        "incorrect": "Check the endings: 'running' (-ing), 'happiness' (-ness), 'quickly' (-ly), 'jumper' (-er), 'beautiful' (-ful)."
-      }
-    },
-    {
-      "instruction": "Sort these words by syllable count.",
-      "words": ["cat", "apple", "elephant", "dog", "butterfly"],
-      "answers": {
-        "1 syllable": ["cat", "dog"],
-        "2 syllables": ["apple"],
-        "3 syllables": ["elephant"],
-        "4 syllables": ["butterfly"]
-      },
-      "feedback": {
-        "correct": "Perfect! You counted the syllables correctly!",
-        "incorrect": "Count again: 'cat' (1), 'dog' (1), 'apple' (2), 'elephant' (3), 'butterfly' (4)."
-      }
-    },
-    {
-      "instruction": "Sort these words by their prefixes.",
-      "words": ["unhappy", "redo", "misunderstand", "preheat", "dislike"],
-      "answers": {
-        "un-": ["unhappy"],
-        "re-": ["redo"],
-        "mis-": ["misunderstand"],
-        "pre-": ["preheat"],
-        "dis-": ["dislike"]
-      },
-      "feedback": {
-        "correct": "Excellent prefix knowledge!",
-        "incorrect": "The prefixes are: 'unhappy' (un-), 'redo' (re-), 'misunderstand' (mis-), 'preheat' (pre-), 'dislike' (dis-)."
-      }
-    },
-    {
-      "instruction": "Sort these words by their plural forms.",
-      "words": ["child", "mouse", "tooth", "goose", "foot"],
-      "answers": {
-        "-ren": ["child"],
-        "-ice": ["mouse"],
-        "-eeth": ["tooth"],
-        "-eese": ["goose"],
-        "-eet": ["foot"]
-      },
-      "feedback": {
-        "correct": "Great job with these irregular plurals!",
-        "incorrect": "Irregular plurals: 'child' → 'children', 'mouse' → 'mice', 'tooth' → 'teeth', 'goose' → 'geese', 'foot' → 'feet'."
-      }
-    },
-    {
-      "instruction": "Sort these words by their opposites.",
-      "words": ["happy", "hot", "light", "young", "fast"],
-      "answers": {
-        "sad": ["happy"],
-        "cold": ["hot"],
-        "heavy": ["light"],
-        "old": ["young"],
-        "slow": ["fast"]
-      },
-      "feedback": {
-        "correct": "Perfect! You know your opposites well!",
-        "incorrect": "The opposites are: happy/sad, hot/cold, light/heavy, young/old, fast/slow."
-      }
-    },
-    {
-      "instruction": "Sort these words by their compound parts.",
-      "words": ["notebook", "sunflower", "toothbrush", "rainbow", "football"],
-      "answers": {
-        "note + book": ["notebook"],
-        "sun + flower": ["sunflower"],
-        "tooth + brush": ["toothbrush"],
-        "rain + bow": ["rainbow"],
-        "foot + ball": ["football"]
-      },
-      "feedback": {
-        "correct": "Excellent compound word analysis!",
-        "incorrect": "Compound words break down as: note+book, sun+flower, tooth+brush, rain+bow, foot+ball."
-      }
-    },
-    {
-      "instruction": "Sort these words by their stress patterns.",
-      "words": ["photograph", "photography", "democrat", "democracy", "record"],
-      "answers": {
-        "First syllable": ["photograph", "democrat", "record"],
-        "Second syllable": ["photography", "democracy"]
-      },
-      "feedback": {
-        "correct": "Perfect! You've got an ear for syllable stress!",
-        "incorrect": "Stress patterns: PHOtograph (1st), phoTOGraphy (2nd), DEMocrat (1st), deMOCracy (2nd), REcord (1st)."
-      }
-    }
-  ]
+  },
 
+  {
+    lessonId: "681aecf9fb88a0487b80fbaa",
+    instruction: "Sort these words by vowel sounds.",
+    words: ["cat", "cake", "cut", "cot", "cute"],
+    answers: {
+      "Short a": ["cat"],
+      "Long a": ["cake"],
+      "Short u": ["cut"],
+      "Short o": ["cot"],
+      "Long u": ["cute"],
+    },
+    feedback: {
+      correct: "Great job! You've nailed the vowel sounds!",
+      incorrect:
+        "Remember: 'cat' (short a), 'cake' (long a), 'cut' (short u), 'cot' (short o), 'cute' (long u).",
+    },
+  },
+  {
+    lessonId: "681aecf9fb88a0487b80fbaa",
+    instruction: "Sort these words by their endings.",
+    words: ["running", "happiness", "quickly", "jumper", "beautiful"],
+    answers: {
+      "-ing": ["running"],
+      "-ness": ["happiness"],
+      "-ly": ["quickly"],
+      "-er": ["jumper"],
+      "-ful": ["beautiful"],
+    },
+    feedback: {
+      correct: "Awesome! You recognized all the word endings!",
+      incorrect:
+        "Check the endings: 'running' (-ing), 'happiness' (-ness), 'quickly' (-ly), 'jumper' (-er), 'beautiful' (-ful).",
+    },
+  },
+  {
+    lessonId: "681aecf9fb88a0487b80fbaa",
+    instruction: "Sort these words by syllable count.",
+    words: ["cat", "apple", "elephant", "dog", "butterfly"],
+    answers: {
+      "1 syllable": ["cat", "dog"],
+      "2 syllables": ["apple"],
+      "3 syllables": ["elephant"],
+      "4 syllables": ["butterfly"],
+    },
+    feedback: {
+      correct: "Perfect! You counted the syllables correctly!",
+      incorrect:
+        "Count again: 'cat' (1), 'dog' (1), 'apple' (2), 'elephant' (3), 'butterfly' (4).",
+    },
+  },
+  {
+    lessonId: "681aecf9fb88a0487b80fbaa",
+    instruction: "Sort these words by their prefixes.",
+    words: ["unhappy", "redo", "misunderstand", "preheat", "dislike"],
+    answers: {
+      "un-": ["unhappy"],
+      "re-": ["redo"],
+      "mis-": ["misunderstand"],
+      "pre-": ["preheat"],
+      "dis-": ["dislike"],
+    },
+    feedback: {
+      correct: "Excellent prefix knowledge!",
+      incorrect:
+        "The prefixes are: 'unhappy' (un-), 'redo' (re-), 'misunderstand' (mis-), 'preheat' (pre-), 'dislike' (dis-).",
+    },
+  },
+  {
+    lessonId: "681aecf9fb88a0487b80fbaa",
+    instruction: "Sort these words by their plural forms.",
+    words: ["child", "mouse", "tooth", "goose", "foot"],
+    answers: {
+      "-ren": ["child"],
+      "-ice": ["mouse"],
+      "-eeth": ["tooth"],
+      "-eese": ["goose"],
+      "-eet": ["foot"],
+    },
+    feedback: {
+      correct: "Great job with these irregular plurals!",
+      incorrect:
+        "Irregular plurals: 'child' → 'children', 'mouse' → 'mice', 'tooth' → 'teeth', 'goose' → 'geese', 'foot' → 'feet'.",
+    },
+  },
+  {
+    lessonId: "681aecf9fb88a0487b80fbaa",
+    instruction: "Sort these words by their opposites.",
+    words: ["happy", "hot", "light", "young", "fast"],
+    answers: {
+      sad: ["happy"],
+      cold: ["hot"],
+      heavy: ["light"],
+      old: ["young"],
+      slow: ["fast"],
+    },
+    feedback: {
+      correct: "Perfect! You know your opposites well!",
+      incorrect:
+        "The opposites are: happy/sad, hot/cold, light/heavy, young/old, fast/slow.",
+    },
+  },
+  {
+    lessonId: "681aecf9fb88a0487b80fbaa",
+    instruction: "Sort these words by their compound parts.",
+    words: ["notebook", "sunflower", "toothbrush", "rainbow", "football"],
+    answers: {
+      "note + book": ["notebook"],
+      "sun + flower": ["sunflower"],
+      "tooth + brush": ["toothbrush"],
+      "rain + bow": ["rainbow"],
+      "foot + ball": ["football"],
+    },
+    feedback: {
+      correct: "Excellent compound word analysis!",
+      incorrect:
+        "Compound words break down as: note+book, sun+flower, tooth+brush, rain+bow, foot+ball.",
+    },
+  },
+  {
+    lessonId: "681aecf9fb88a0487b80fbaa",
+    instruction: "Sort these words by their stress patterns.",
+    words: ["photograph", "photography", "democrat", "democracy", "record"],
+    answers: {
+      "First syllable": ["photograph", "democrat", "record"],
+      "Second syllable": ["photography", "democracy"],
+    },
+    feedback: {
+      correct: "Perfect! You've got an ear for syllable stress!",
+      incorrect:
+        "Stress patterns: PHOtograph (1st), phoTOGraphy (2nd), DEMocrat (1st), deMOCracy (2nd), REcord (1st).",
+    },
+  },
+];
 
 const Sorting2 = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -195,6 +196,17 @@ const Sorting2 = () => {
   const [isCorrect, setIsCorrect] = useState(false);
   const [showFeedback, setShowFeedback] = useState(false);
   const dropTargetRef = useRef(null);
+
+  // Text-to-speech functionality
+  const [isReading, setIsReading] = useState(false);
+  const readAloud = (text) => {
+    if ("speechSynthesis" in window && !isReading) {
+      setIsReading(true);
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.onend = () => setIsReading(false);
+      window.speechSynthesis.speak(utterance);
+    }
+  };
 
   // Reset all states when question changes
   useEffect(() => {
@@ -325,6 +337,7 @@ const Sorting2 = () => {
             : "bg-red-200"
           : "bg-blue-200"
       }`}
+      onClick={() => readAloud(word)}
     >
       {word}
     </div>

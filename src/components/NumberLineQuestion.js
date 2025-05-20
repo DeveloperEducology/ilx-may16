@@ -1,17 +1,18 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 
-const NumberLineQuestion = ({ questions, onFinish }) => {
+const NumberLineQuestion = ({
+  question,
+  userAnswers,
+  setUserAnswers,
+  feedback,
+  setFeedback,
+  initializeUserAnswer,
+}) => {
   const canvasRef = useRef(null);
-  const [inputValues, setInputValues] = useState([]);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [feedback, setFeedback] = useState("");
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [isAnswerCorrect, setIsAnswerCorrect] = useState(false);
-
-  const currentQuestion = questions[currentQuestionIndex];
 
   const drawNumberLine = () => {
     const canvas = canvasRef.current;
+    if (!canvas || !question.sequence) return;
     const ctx = canvas.getContext("2d");
     const width = canvas.width;
     const height = canvas.height;
@@ -42,10 +43,10 @@ const NumberLineQuestion = ({ questions, onFinish }) => {
     ctx.stroke();
 
     // Ticks
-    for (let i = 0; i < currentQuestion.numbers.length; i++) {
+    for (let i = 0; i < question.sequence.length; i++) {
       const x =
-        (width / currentQuestion.numbers.length) * i +
-        width / (2 * currentQuestion.numbers.length);
+        (width / question.sequence.length) * i +
+        width / (2 * question.sequence.length);
       ctx.beginPath();
       ctx.moveTo(x, height / 2 - 8);
       ctx.lineTo(x, height / 2 + 8);
@@ -55,66 +56,33 @@ const NumberLineQuestion = ({ questions, onFinish }) => {
 
   useEffect(() => {
     drawNumberLine();
-
-    const newInputValues = currentQuestion.numbers
-      .filter((n) => n === null)
-      .map(() => "");
-
-    setInputValues(newInputValues);
-    setFeedback("");
-    setIsSubmitted(false);
-    setIsAnswerCorrect(false);
-  }, [currentQuestionIndex]);
+    if (!userAnswers[question._id]) {
+      setUserAnswers({
+        ...userAnswers,
+        [question._id]: initializeUserAnswer(question),
+      });
+    }
+  }, [question._id, userAnswers, setUserAnswers, initializeUserAnswer]);
 
   const handleInputChange = (index, value) => {
-    const newValues = [...inputValues];
+    const newValues = [
+      ...(userAnswers[question._id] || initializeUserAnswer(question)),
+    ];
     newValues[index] = value;
-    setInputValues(newValues);
+    setUserAnswers({ ...userAnswers, [question._id]: newValues });
     setFeedback("");
-    setIsSubmitted(false);
-    setIsAnswerCorrect(false);
   };
 
-  const handleSubmit = () => {
-    if (inputValues.some((v) => v === "")) {
-      setFeedback("Please fill in all missing numbers.");
-      return;
-    }
-
-    const userAnswers = inputValues.map((v) => parseInt(v, 10));
-    const correctAnswers = currentQuestion.correctAnswer;
-
-    const allCorrect =
-      userAnswers.length === correctAnswers.length &&
-      userAnswers.every((val, index) => val === correctAnswers[index]);
-
-    if (allCorrect) {
-      setFeedback("Correct!");
-      setIsAnswerCorrect(true);
-    } else {
-      setFeedback(
-        `Incorrect. The correct answers are ${correctAnswers.join(" and ")}.`
-      );
-      setIsAnswerCorrect(false);
-    }
-
-    setIsSubmitted(true);
-  };
-
-  const handleNext = () => {
-    if (currentQuestionIndex < questions.length - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
-    } else {
-      if (onFinish) onFinish();
-    }
-  };
+  if (!question.sequence) {
+    return <p className="text-lg text-red-600">Invalid question data.</p>;
+  }
 
   let nullInputCounter = 0;
 
   return (
-    <div className="bg-white p-4 md:p-8 rounded-lg shadow-lg w-full max-w-lg mx-auto">
+    <div className=" p-10 rounded-lg w-full max-w-lg mx-auto">
       <h2 className="text-lg font-semibold mb-4 text-left">
-        {currentQuestion.text}
+        {question.prompt || "Number Line Question"}
       </h2>
       <div className="relative w-full">
         <canvas
@@ -124,60 +92,43 @@ const NumberLineQuestion = ({ questions, onFinish }) => {
           className="w-full h-auto"
         />
         <div className="absolute top-[22px] left-0 w-full flex justify-between px-[1%]">
-          {currentQuestion.numbers.map((number, index) => {
+          {question.sequence.map((number, index) => {
             if (number === null) {
               const inputIndex = nullInputCounter++;
               return (
                 <div key={index} className="text-center w-[12.5%]">
                   <input
                     type="number"
-                    value={inputValues[inputIndex] || ""}
+                    value={userAnswers[question._id]?.[inputIndex] || ""}
                     onChange={(e) =>
                       handleInputChange(inputIndex, e.target.value)
                     }
-                    className="w-full max-w-[50px] h-6 text-sm text-center border border-gray-400 rounded"
+                    className="w-full max-w-[50px] h-6 text-sm text-center border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
                     placeholder="?"
-                    disabled={isSubmitted}
+                    aria-label={`Answer ${inputIndex + 1} for ${
+                      question.prompt || "number line"
+                    }`}
                   />
                 </div>
               );
-            } else {
-              return (
-                <div key={index} className="text-center w-[12.5%]">
-                  <span className="text-sm">{number}</span>
-                </div>
-              );
             }
+            return (
+              <div key={index} className="text-center w-[12.5%]">
+                <span className="text-sm">{number}</span>
+              </div>
+            );
           })}
         </div>
       </div>
-
       {feedback && (
         <p
           className={`text-sm mt-4 ${
-            isAnswerCorrect ? "text-green-600" : "text-red-600"
+            feedback.startsWith("✅") ? "text-green-600" : "text-red-600"
           }`}
         >
           {feedback}
         </p>
       )}
-
-      <div className="flex justify-between mt-6">
-        <button
-          onClick={handleSubmit}
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 disabled:bg-gray-400"
-          disabled={isSubmitted}
-        >
-          Submit
-        </button>
-        <button
-          onClick={handleNext}
-          className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 disabled:bg-gray-400"
-          disabled={!isSubmitted || !isAnswerCorrect}
-        >
-          {currentQuestionIndex < questions.length - 1 ? "Next" : "Finish"}
-        </button>
-      </div>
     </div>
   );
 };

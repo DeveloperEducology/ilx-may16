@@ -4,18 +4,24 @@ import { useNavigate } from "react-router-dom";
 
 const questions = [
   {
-    text: "Type the missing number.",
-    numbers: [92, 93, null, 95, 96, 97, null, 99],
+    type: "number-line",
+    lessonId: "6811143da6aafb33e7aed3a0",
+    prompt: "Type the missing number.",
+    sequence: [92, 93, null, 95, 96, 97, null, 99],
     correctAnswer: [94, 98],
   },
   {
-    text: "Type the missing number.",
-    numbers: [10, 11, null, 13, 14],
+    lessonId: "6811143da6aafb33e7aed3a0",
+    type: "number-line",
+    prompt: "Type the missing number.",
+    sequence: [10, 11, null, 13, 14],
     correctAnswer: [12],
   },
   {
-    text: "Type the missing number.",
-    numbers: [5, null, 7, 8, 9, null],
+    type: "number-line",
+    lessonId: "6811143da6aafb33e7aed3a0",
+    prompt: "Type the missing number.",
+    sequence: [5, null, 7, 8, 9, null],
     correctAnswer: [6, 10],
   },
 ];

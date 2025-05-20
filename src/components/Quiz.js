@@ -3,7 +3,8 @@ import DOMPurify from "dompurify";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import UploadingAnimation from "../assets/uploading.gif";
-// import { questions } from "./QuestionData";
+import NumberLineQuestion from "./NumberLineQuestion";
+import EnglishWordSorting from "./EnglishWordSorting";
 
 const Quiz = () => {
   const navigate = useNavigate();
@@ -22,9 +23,7 @@ const Quiz = () => {
     const fetchQuestions = async () => {
       setLoading(true);
       try {
-        // Fetch questions specific to the lessonId
         const questionsRes = await axios.get(
-          // `http://localhost:5000/api/questions?lessonId=${lessonId}`
           `https://ilx-backend.onrender.com/api/questions?lessonId=${lessonId}`
         );
         console.log("Response from API:", questionsRes.data);
@@ -49,7 +48,7 @@ const Quiz = () => {
     };
 
     fetchQuestions();
-  }, [lessonId]); // Depend on lessonId to refetch if it changes
+  }, [lessonId]);
 
   const question = questions[currentQuestionIndex];
 
@@ -65,6 +64,8 @@ const Quiz = () => {
               0
             );
       return Array(nullCount).fill("");
+    } else if (question.type === "blank-answer") {
+      return question.sequence.filter((n) => n === null).map(() => "");
     }
     return "";
   };
@@ -167,6 +168,14 @@ const Quiz = () => {
             value.trim().toLowerCase() ===
               String(question.correctAnswers[idx]).trim().toLowerCase()
         );
+    } else if (question.type === "blank-answer") {
+      const sequenceAnswers = userInput || initializeUserAnswer(question);
+      const correctAnswers = question.correctAnswers;
+      isCorrect =
+        sequenceAnswers.length === correctAnswers.length &&
+        sequenceAnswers.every(
+          (value, idx) => value && parseInt(value, 10) === correctAnswers[idx]
+        );
     } else {
       const normalizedUser = String(userInput || "")
         .trim()
@@ -189,6 +198,10 @@ const Quiz = () => {
       ? `❌ Incorrect, the correct answers are ${question.correctAnswers.join(
           ", "
         )}. You entered: ${(userInput || []).join(", ")}`
+      : question.type === "blank-answer"
+      ? `❌ Incorrect, the correct answers are ${question.correctAnswers.join(
+          " and "
+        )}. You entered: ${(userInput || []).join(", ")}`
       : question.correctAnswers
       ? `❌ Incorrect, the correct answers are ${question.correctAnswers.join(
           ", "
@@ -210,7 +223,7 @@ const Quiz = () => {
           setShowQuestion(true);
           setFeedback({
             ...feedback,
-            [questions[currentQuestionIndex + 1].id]: "",
+            [questions[currentQuestionIndex + 1]?._id]: "",
           });
           setFilledSequences([]);
         } else {
@@ -218,14 +231,71 @@ const Quiz = () => {
             ...feedback,
             [question._id]: "✅ Correct! Quiz completed!",
           });
+          // navigate(`/subjects/${classId}`);
         }
-        // navigate(`/subjects/${classId}`);
       }, 1500);
     }
   };
 
   const renderQuestion = () => {
     switch (question?.type) {
+      // In your Quiz component's renderQuestion function
+      case "english":
+        return (
+          <EnglishWordSorting
+            question={question}
+            onAnswer={(isCorrect) => {
+              const feedbackMessage = isCorrect
+                ? "✅ Correct!"
+                : `❌ Incorrect. ${question.feedback.incorrect}`;
+              setFeedback({ ...feedback, [question._id]: feedbackMessage });
+
+              // Initialize userAnswers if not already set
+              if (!userAnswers[question._id]) {
+                setUserAnswers((prev) => ({
+                  ...prev,
+                  [question._id]: isCorrect ? "correct" : "incorrect",
+                }));
+              }
+
+              if (isCorrect) {
+                setShowQuestion(false);
+                setTimeout(() => {
+                  if (currentQuestionIndex < questions.length - 1) {
+                    setCurrentQuestionIndex(currentQuestionIndex + 1);
+                    setShowQuestion(true);
+                    setFeedback({
+                      ...feedback,
+                      [questions[currentQuestionIndex + 1]?._id]: "",
+                    });
+                  } else {
+                    setFeedback({
+                      ...feedback,
+                      [question._id]: "✅ Correct! Quiz completed!",
+                    });
+                  }
+                }, 1500);
+              }
+            }}
+            onNext={() => {
+              if (currentQuestionIndex < questions.length - 1) {
+                setCurrentQuestionIndex(currentQuestionIndex + 1);
+                setShowQuestion(true);
+                setFeedback({
+                  ...feedback,
+                  [questions[currentQuestionIndex + 1]?._id]: "",
+                });
+              }
+            }}
+            onReset={() => {
+              setFeedback({ ...feedback, [question._id]: "" });
+              setUserAnswers((prev) => ({
+                ...prev,
+                [question._id]: "",
+              }));
+            }}
+          />
+        );
       case "reasoning":
       case "single-select":
         return (
@@ -235,7 +305,7 @@ const Quiz = () => {
             </p>
             {question.imageUrl?.length > 0 && (
               <div className="mb-4">
-                {question?.imageUrl.map((url, idx) => (
+                {question.imageUrl.map((url, idx) => (
                   <img
                     key={idx}
                     src={url}
@@ -243,12 +313,10 @@ const Quiz = () => {
                     style={
                       question.style || { maxWidth: "100%", height: "auto" }
                     }
-                    // className="mx-auto rounded"
                   />
                 ))}
               </div>
             )}
-
             {question.options.map((opt, index) => {
               const isSelected = userAnswers[question._id] === opt;
               const alphabet = String.fromCharCode(65 + index);
@@ -280,6 +348,20 @@ const Quiz = () => {
               );
             })}
           </>
+        );
+
+      case "number-line":
+        return (
+          <NumberLineQuestion
+            question={question}
+            userAnswers={userAnswers}
+            setUserAnswers={setUserAnswers}
+            feedback={feedback[question._id] || ""}
+            setFeedback={(message) =>
+              setFeedback({ ...feedback, [question._id]: message })
+            }
+            initializeUserAnswer={initializeUserAnswer}
+          />
         );
 
       case "multi-select":
@@ -462,17 +544,15 @@ const Quiz = () => {
                 </p>
               )}
             </div>
-
             {question.imageUrl?.length > 0 && (
               <div className="flex flex-wrap justify-start gap-4 mb-6">
-                {question?.imageUrl.map((img, index) => (
+                {question.imageUrl.map((img, index) => (
                   <img
                     key={index}
                     src={img}
                     alt={`Question ${currentQuestionIndex + 1} image ${
                       index + 1
                     }`}
-                    // className="rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300"
                     style={
                       question.style || { maxWidth: "100%", height: "auto" }
                     }
@@ -480,7 +560,6 @@ const Quiz = () => {
                 ))}
               </div>
             )}
-
             <div className="text-lg mb-6">
               {questionStrings.map((sequenceStr, qIndex) => {
                 if (!sequenceStr || typeof sequenceStr !== "string") {
@@ -594,7 +673,6 @@ const Quiz = () => {
                 </div>
               )}
             </div>
-
             {filledSequences.length > 0 && (
               <div className="mt-4 text-lg">
                 {filledSequences.map((seq, idx) => (
@@ -628,6 +706,10 @@ const Quiz = () => {
         sequenceAnswers.length === nullCount &&
         sequenceAnswers.every((val) => val && val.trim() !== "")
       );
+    } else if (question?.type === "blank-answer") {
+      const sequenceAnswers =
+        userAnswers[question._id] || initializeUserAnswer(question);
+      return sequenceAnswers.every((val) => val && val.trim() !== "");
     }
     return (
       userAnswers[question?._id] !== undefined &&
@@ -670,30 +752,30 @@ const Quiz = () => {
         }
       `}</style>
       <div>
-        <h2 className="text-2xl font-bold mb-4">Quiz</h2>
+        {/* <h2 className="text-2xl font-bold mb-4">Quiz</h2> */}
         <div>
           <h4 className="text-lg font-semibold mb-4">
             Question {currentQuestionIndex + 1} of {questions.length}
           </h4>
-
           {showQuestion ? renderQuestion() : null}
-          <div>
-            {showQuestion && (
-              <button
-                onClick={checkAnswer}
-                disabled={!allInputsFilled()}
-                className={`mt-4 px-6 py-2 rounded text-white font-semibold transition ${
-                  allInputsFilled()
-                    ? "bg-green-500 hover:bg-green-600"
-                    : "bg-gray-400 cursor-not-allowed"
-                }`}
-                aria-label="Submit answer"
-              >
-                Submit
-              </button>
-            )}
-          </div>
-
+          {question?.type !== "english" && (
+            <div>
+              {showQuestion && (
+                <button
+                  onClick={checkAnswer}
+                  disabled={!allInputsFilled()}
+                  className={`mt-4 px-6 py-2 rounded text-white font-semibold transition ${
+                    allInputsFilled()
+                      ? "bg-green-500 hover:bg-green-600"
+                      : "bg-gray-400 cursor-not-allowed"
+                  }`}
+                  aria-label="Submit answer"
+                >
+                  Submit
+                </button>
+              )}
+            </div>
+          )}
           {feedback[question?._id] && (
             <p
               className={`mt-4 text-lg ${
@@ -705,7 +787,6 @@ const Quiz = () => {
               {feedback[question?._id]}
             </p>
           )}
-
           {showQuestion && (
             <div className="mt-6 flex gap-4">
               <button

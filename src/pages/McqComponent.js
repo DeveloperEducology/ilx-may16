@@ -9,6 +9,7 @@ function McqComponent({ classId, subjectId, question, onSubmit }) {
   console.log(selectedOptions);
 
   // Text-to-speech functionality
+  // const [isReading, setIsReading] = useState(false);
   const readAloud = (text) => {
     if ("speechSynthesis" in window && !isReading) {
       setIsReading(true);

@@ -43,6 +43,8 @@ import SequenceInput from "./components/SequenceInput";
 import QuizHtml from "./components/QuizHtml";
 import QuizAppModal from "./components/QuizAppModal";
 import Quiz from "./components/Quiz";
+import BlankNumberLine from "./pages/BlankNumberLine.js";
+import NumberSorting from "./components/NumberSorting.js";
 
 // Create a wrapper component to use useLocation
 const HeaderWrapper = () => {
@@ -56,7 +58,7 @@ const HeaderWrapper = () => {
 
   return isHomePage ? (
     <header className="bg-green-600 text-white p-4">
-      <h1 className="text-2xl font-bold">VSTUTORS Learning Platform</h1>
+      <h1 className="text-2xl font-bold">Vijay Learning Platform</h1>
     </header>
   ) : (
     <Header />
@@ -115,9 +117,10 @@ function App() {
               <Route path="/new" element={<QuestionForm />} />
               <Route
                 path="/number-line"
-                element={<BlankNumberLineComponent />}
+                element={<NumberLinePage />}
               />
               <Route path="/iblank" element={<IBlnak />} />
+              <Route path="/numsort" element={<NumberSorting />} />
               <Route
                 path="/number-selection"
                 element={<NumberSelectionComponent />}
