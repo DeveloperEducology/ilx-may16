@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 
 const questions = [
   {
@@ -7,8 +7,7 @@ const questions = [
     correctOrder: [60, 58, 56, 51],
   },
   {
-    instruction:
-      "Arrange these numbers in ascending order (smallest to largest).",
+    instruction: "Arrange these numbers in ascending order (smallest to largest).",
     numbers: [23, 12, 34],
     correctOrder: [12, 23, 34],
   },
@@ -33,13 +32,89 @@ const NumberSorting = () => {
   const [feedback, setFeedback] = useState(null);
   const [score, setScore] = useState(0);
   const [showFinalScore, setShowFinalScore] = useState(false);
+  const [touchPosition, setTouchPosition] = useState({ x: 0, y: 0 });
+  const dropTargetRef = useRef(null);
+  const dragPreviewRef = useRef(null);
 
   const currentQuestion = questions[currentQuestionIndex];
 
+  // Handle touch events for mobile
+  const handleTouchStart = (e, index) => {
+    e.preventDefault();
+    setDraggedNumber(index);
+    const touch = e.touches[0];
+    setTouchPosition({ x: touch.clientX, y: touch.clientY });
+    
+    // Create a drag preview
+    if (!dragPreviewRef.current) {
+      const preview = document.createElement('div');
+      preview.className = 'fixed z-50 bg-blue-500 text-white text-lg font-semibold px-4 py-2 rounded shadow-lg pointer-events-none';
+      preview.textContent = currentOrder[index];
+      preview.style.left = `${touch.clientX - 30}px`;
+      preview.style.top = `${touch.clientY - 30}px`;
+      document.body.appendChild(preview);
+      dragPreviewRef.current = preview;
+    }
+  };
+
+  const handleTouchMove = (e) => {
+    if (draggedNumber === null) return;
+    const touch = e.touches[0];
+    setTouchPosition({ x: touch.clientX, y: touch.clientY });
+    
+    // Update drag preview position
+    if (dragPreviewRef.current) {
+      dragPreviewRef.current.style.left = `${touch.clientX - 30}px`;
+      dragPreviewRef.current.style.top = `${touch.clientY - 30}px`;
+    }
+
+    const element = document.elementFromPoint(touch.clientX, touch.clientY);
+    dropTargetRef.current = element?.closest(".draggable-item");
+  };
+
+  const handleTouchEnd = () => {
+    if (draggedNumber !== null && dropTargetRef.current) {
+      const targetIndex = parseInt(dropTargetRef.current.dataset.index);
+      handleDropLogic(draggedNumber, targetIndex);
+    }
+    
+    // Remove drag preview
+    if (dragPreviewRef.current) {
+      document.body.removeChild(dragPreviewRef.current);
+      dragPreviewRef.current = null;
+    }
+    
+    setDraggedNumber(null);
+    dropTargetRef.current = null;
+  };
+
+  // Common drop logic for both mouse and touch
+  const handleDropLogic = (draggedIndex, targetIndex) => {
+    if (draggedIndex === targetIndex) return;
+
+    const newOrder = [...currentOrder];
+    const movedNumber = newOrder[draggedIndex];
+    
+    newOrder.splice(draggedIndex, 1);
+    newOrder.splice(targetIndex, 0, movedNumber);
+
+    setCurrentOrder(newOrder);
+  };
+
+  // Mouse drag events
   const handleDragStart = (e, index) => {
     setDraggedNumber(index);
     e.dataTransfer.setData("text/plain", index);
     e.dataTransfer.effectAllowed = "move";
+    
+    // Create a drag image for desktop
+    const dragImage = e.target.cloneNode(true);
+    dragImage.style.position = 'fixed';
+    dragImage.style.opacity = '0.8';
+    dragImage.style.zIndex = '1000';
+    document.body.appendChild(dragImage);
+    e.dataTransfer.setDragImage(dragImage, 0, 0);
+    setTimeout(() => document.body.removeChild(dragImage), 0);
   };
 
   const handleDragOver = (e) => {
@@ -50,16 +125,7 @@ const NumberSorting = () => {
   const handleDrop = (e, targetIndex) => {
     e.preventDefault();
     if (draggedNumber === null) return;
-
-    const newOrder = [...currentOrder];
-    const movedNumber = newOrder[draggedNumber];
-
-    // Remove from original position
-    newOrder.splice(draggedNumber, 1);
-    // Insert at new position
-    newOrder.splice(targetIndex, 0, movedNumber);
-
-    setCurrentOrder(newOrder);
+    handleDropLogic(draggedNumber, targetIndex);
     setDraggedNumber(null);
   };
 
@@ -115,7 +181,11 @@ const NumberSorting = () => {
   }
 
   return (
-    <div className="p-6 max-w-md mx-auto text-center">
+    <div 
+      className="p-6 max-w-md mx-auto text-center"
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
       <div className="flex items-center justify-center mb-4 space-x-2">
         <span role="img" aria-label="speaker" className="text-blue-500 text-xl">
           🔊
@@ -127,23 +197,25 @@ const NumberSorting = () => {
         Question {currentQuestionIndex + 1} of {questions.length}
       </div>
 
-      <div className="flex justify-center mb-6 space-x-4">
+      <div className="flex flex-wrap justify-center gap-2 mb-6">
         {currentOrder.map((num, index) => (
           <div
             key={index}
+            data-index={index}
             draggable
             onDragStart={(e) => handleDragStart(e, index)}
             onDragOver={handleDragOver}
             onDrop={(e) => handleDrop(e, index)}
-            className={`bg-blue-500 text-white text-lg font-semibold px-4 py-2 rounded shadow cursor-move
-              ${draggedNumber === index ? "opacity-50" : ""}`}
+            onTouchStart={(e) => handleTouchStart(e, index)}
+            className={`draggable-item bg-blue-500 text-white text-lg font-semibold px-4 py-2 rounded shadow cursor-move touch-none
+              ${draggedNumber === index ? "invisible" : ""}`}
           >
             {num}
           </div>
         ))}
       </div>
 
-      <div className="flex justify-center space-x-4 mb-4">
+      <div className="flex flex-wrap justify-center gap-2 mb-4">
         <button
           onClick={handleSubmit}
           className="bg-green-500 text-white font-bold px-6 py-2 rounded shadow hover:bg-green-600"
