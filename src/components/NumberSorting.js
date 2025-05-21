@@ -1,258 +1,392 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion"; // Added for animations
+import { useSound } from "use-sound"; // Added for sound effects
+import correct from "../assets/sounds/correct.mp3"; // Add sound assets
+import incorrect from "../assets/sounds/incorrect.mp3";
 
 const questions = [
   {
-    instruction: "Put these numbers in order from largest to smallest.",
-    numbers: [51, 58, 56, 60],
+    id: 1,
+    type: "words",
+    instruction: "Arrange these words to form a correct sentence.",
+    items: ["there", "three", "are", "cats"],
+    correctOrder: ["there", "are", "three", "cats"],
+    hint: "The sentence should describe a quantity of cats.",
+  },
+  {
+    id: 2,
+    type: "numbers",
+    instruction: "Sort these numbers from largest to smallest.",
+    items: [51, 58, 56, 60],
     correctOrder: [60, 58, 56, 51],
+    hint: "Compare the numerical values carefully.",
   },
   {
-    instruction: "Arrange these numbers in ascending order (smallest to largest).",
-    numbers: [23, 12, 34],
+    id: 3,
+    type: "numbers",
+    instruction: "Arrange these numbers in ascending order.",
+    items: [23, 12, 34],
     correctOrder: [12, 23, 34],
+    hint: "Start with the smallest number.",
   },
   {
+    id: 4,
+    type: "numbers",
     instruction: "Order these numbers from highest to lowest.",
-    numbers: [105, 99, 110],
+    items: [105, 99, 110],
     correctOrder: [110, 105, 99],
+    hint: "Start with the largest number.",
   },
   {
+    id: 5,
+    type: "numbers",
     instruction: "Sort these numbers in increasing order.",
-    numbers: [7, 3, 10],
+    items: [7, 3, 10],
     correctOrder: [3, 7, 10],
+    hint: "Arrange from smallest to largest.",
   },
+  {
+    id: 6,
+    type: "words",
+    instruction: "Arrange these words to form a correct sentence.",
+    items: ["dog", "the", "runs", "fast"],
+    correctOrder: ["the", "dog", "runs", "fast"],
+    hint: "The sentence describes an action of a dog."
+  },
+  {
+    id: 7,
+    type: "numbers",
+    instruction: "Sort these numbers from smallest to largest.",
+    items: [42, 19, 67, 33],
+    correctOrder: [19, 33, 42, 67],
+    hint: "Begin with the smallest number and proceed to the largest."
+  },
+  {
+    id: 8,
+    type: "words",
+    instruction: "Form a correct sentence by arranging these words.",
+    items: ["birds", "sing", "the", "morning", "in"],
+    correctOrder: ["the", "birds", "sing", "in", "the", "morning"],
+    hint: "The sentence describes when birds perform an action."
+  },
+  {
+    id: 9,
+    type: "numbers",
+    instruction: "Order these numbers from highest to lowest.",
+    items: [88, 76, 95, 82],
+    correctOrder: [95, 88, 82, 76],
+    hint: "Start with the highest number."
+  },
+  {
+    id: 10,
+    type: "words",
+    instruction: "Arrange these words to make a correct sentence.",
+    items: ["we", "park", "to", "go", "the"],
+    correctOrder: ["we", "go", "to", "the", "park"],
+    hint: "The sentence describes an action involving a destination."
+  }
 ];
 
 const NumberSorting = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [currentOrder, setCurrentOrder] = useState(
-    questions[currentQuestionIndex].numbers
-  );
-  const [draggedNumber, setDraggedNumber] = useState(null);
+  const [currentOrder, setCurrentOrder] = useState(questions[0].items);
+  const [draggedIndex, setDraggedIndex] = useState(null);
   const [feedback, setFeedback] = useState(null);
   const [score, setScore] = useState(0);
   const [showFinalScore, setShowFinalScore] = useState(false);
-  const [touchPosition, setTouchPosition] = useState({ x: 0, y: 0 });
-  const dropTargetRef = useRef(null);
+  const [hoverIndex, setHoverIndex] = useState(null);
+  const [showHint, setShowHint] = useState(false);
+  const [playCorrect] = useSound(correct, { volume: 0.5 });
+  const [playIncorrect] = useSound(incorrect, { volume: 0.5 });
+  const containerRef = useRef(null);
   const dragPreviewRef = useRef(null);
 
   const currentQuestion = questions[currentQuestionIndex];
 
-  // Handle touch events for mobile
-  const handleTouchStart = (e, index) => {
-    e.preventDefault();
-    setDraggedNumber(index);
-    const touch = e.touches[0];
-    setTouchPosition({ x: touch.clientX, y: touch.clientY });
-    
-    // Create a drag preview
-    if (!dragPreviewRef.current) {
-      const preview = document.createElement('div');
-      preview.className = 'fixed z-50 bg-blue-500 text-white text-lg font-semibold px-4 py-2 rounded shadow-lg pointer-events-none';
-      preview.textContent = currentOrder[index];
-      preview.style.left = `${touch.clientX - 30}px`;
-      preview.style.top = `${touch.clientY - 30}px`;
-      document.body.appendChild(preview);
-      dragPreviewRef.current = preview;
-    }
-  };
+  // Initialize current order when question changes
+  useEffect(() => {
+    setCurrentOrder(questions[currentQuestionIndex].items);
+    setFeedback(null);
+    setShowHint(false);
+  }, [currentQuestionIndex]);
 
-  const handleTouchMove = (e) => {
-    if (draggedNumber === null) return;
-    const touch = e.touches[0];
-    setTouchPosition({ x: touch.clientX, y: touch.clientY });
-    
-    // Update drag preview position
-    if (dragPreviewRef.current) {
-      dragPreviewRef.current.style.left = `${touch.clientX - 30}px`;
-      dragPreviewRef.current.style.top = `${touch.clientY - 30}px`;
-    }
-
-    const element = document.elementFromPoint(touch.clientX, touch.clientY);
-    dropTargetRef.current = element?.closest(".draggable-item");
-  };
-
-  const handleTouchEnd = () => {
-    if (draggedNumber !== null && dropTargetRef.current) {
-      const targetIndex = parseInt(dropTargetRef.current.dataset.index);
-      handleDropLogic(draggedNumber, targetIndex);
-    }
-    
-    // Remove drag preview
-    if (dragPreviewRef.current) {
-      document.body.removeChild(dragPreviewRef.current);
-      dragPreviewRef.current = null;
-    }
-    
-    setDraggedNumber(null);
-    dropTargetRef.current = null;
-  };
-
-  // Common drop logic for both mouse and touch
-  const handleDropLogic = (draggedIndex, targetIndex) => {
-    if (draggedIndex === targetIndex) return;
-
-    const newOrder = [...currentOrder];
-    const movedNumber = newOrder[draggedIndex];
-    
-    newOrder.splice(draggedIndex, 1);
-    newOrder.splice(targetIndex, 0, movedNumber);
-
-    setCurrentOrder(newOrder);
-  };
-
-  // Mouse drag events
+  // Desktop drag handlers
   const handleDragStart = (e, index) => {
-    setDraggedNumber(index);
     e.dataTransfer.setData("text/plain", index);
-    e.dataTransfer.effectAllowed = "move";
-    
-    // Create a drag image for desktop
-    const dragImage = e.target.cloneNode(true);
-    dragImage.style.position = 'fixed';
-    dragImage.style.opacity = '0.8';
-    dragImage.style.zIndex = '1000';
-    document.body.appendChild(dragImage);
-    e.dataTransfer.setDragImage(dragImage, 0, 0);
-    setTimeout(() => document.body.removeChild(dragImage), 0);
+    setDraggedIndex(index);
+    e.target.style.opacity = "0.3";
   };
 
-  const handleDragOver = (e) => {
+  const handleDragEnd = (e) => {
+    e.target.style.opacity = "1";
+    setDraggedIndex(null);
+    setHoverIndex(null);
+  };
+
+  const handleDragOver = (e, index) => {
     e.preventDefault();
-    e.dataTransfer.dropEffect = "move";
+    setHoverIndex(index);
   };
 
   const handleDrop = (e, targetIndex) => {
     e.preventDefault();
-    if (draggedNumber === null) return;
-    handleDropLogic(draggedNumber, targetIndex);
-    setDraggedNumber(null);
+    const sourceIndex = parseInt(e.dataTransfer.getData("text/plain"));
+    if (sourceIndex === targetIndex) return;
+
+    const newOrder = [...currentOrder];
+    const [movedItem] = newOrder.splice(sourceIndex, 1);
+    newOrder.splice(targetIndex, 0, movedItem);
+    setCurrentOrder(newOrder);
+    setHoverIndex(null);
+  };
+
+  // Mobile touch handlers
+  const handleTouchStart = (e, index) => {
+    const touch = e.touches[0];
+    setDraggedIndex(index);
+
+    const preview = document.createElement("div");
+    preview.className =
+      "fixed z-50 bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg pointer-events-none";
+    preview.textContent = currentOrder[index];
+    preview.style.left = `${touch.clientX - 40}px`;
+    preview.style.top = `${touch.clientY - 30}px`;
+    document.body.appendChild(preview);
+    dragPreviewRef.current = preview;
+  };
+
+  const handleTouchMove = (e) => {
+    if (draggedIndex === null) return;
+    const touch = e.touches[0];
+
+    if (dragPreviewRef.current) {
+      dragPreviewRef.current.style.left = `${touch.clientX - 40}px`;
+      dragPreviewRef.current.style.top = `${touch.clientY - 30}px`;
+    }
+
+    const element = document.elementFromPoint(touch.clientX, touch.clientY);
+    const target = element?.closest(".draggable-item");
+    const targetIndex = target ? parseInt(target.dataset.index) : null;
+    if (targetIndex !== null && targetIndex !== hoverIndex) {
+      setHoverIndex(targetIndex);
+    }
+  };
+
+  const handleTouchEnd = () => {
+    if (
+      draggedIndex !== null &&
+      hoverIndex !== null &&
+      draggedIndex !== hoverIndex
+    ) {
+      const newOrder = [...currentOrder];
+      const [movedItem] = newOrder.splice(draggedIndex, 1);
+      newOrder.splice(hoverIndex, 0, movedItem);
+      setCurrentOrder(newOrder);
+    }
+
+    if (dragPreviewRef.current) {
+      document.body.removeChild(dragPreviewRef.current);
+      dragPreviewRef.current = null;
+    }
+
+    setDraggedIndex(null);
+    setHoverIndex(null);
   };
 
   const handleSubmit = () => {
     const isCorrect =
       JSON.stringify(currentOrder) ===
       JSON.stringify(currentQuestion.correctOrder);
-    setFeedback(isCorrect ? "✅ Correct!" : "❌ Try Again");
+    setFeedback({
+      isCorrect,
+      message: isCorrect
+        ? "✅ Correct! Well done!"
+        : "❌ Incorrect. Try again!",
+    });
 
     if (isCorrect) {
       setScore(score + 1);
+      playCorrect();
+    } else {
+      playIncorrect();
     }
   };
 
   const handleNextQuestion = () => {
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
-      setCurrentOrder(questions[currentQuestionIndex + 1].numbers);
-      setFeedback(null);
     } else {
       setShowFinalScore(true);
     }
   };
 
   const resetGame = () => {
-    setCurrentOrder(currentQuestion.numbers);
+    setCurrentOrder(currentQuestion.items);
     setFeedback(null);
+    setShowHint(false);
   };
 
   const restartGame = () => {
     setCurrentQuestionIndex(0);
-    setCurrentOrder(questions[0].numbers);
-    setFeedback(null);
     setScore(0);
     setShowFinalScore(false);
   };
 
+  const renderItem = (item, index) => {
+    const isWord = currentQuestion.type === "words";
+    const baseStyles = `draggable-item px-4 py-2 rounded-lg shadow cursor-move select-none
+      ${draggedIndex === index ? "opacity-30" : ""}
+      ${hoverIndex === index ? "ring-2 ring-yellow-400" : ""}`;
+
+    return (
+      <motion.div
+        key={index}
+        data-index={index}
+        draggable
+        onDragStart={(e) => handleDragStart(e, index)}
+        onDragEnd={handleDragEnd}
+        onDragOver={(e) => handleDragOver(e, index)}
+        onDragLeave={() => setHoverIndex(null)}
+        onDrop={(e) => handleDrop(e, index)}
+        onTouchStart={(e) => handleTouchStart(e, index)}
+        className={baseStyles}
+        style={{
+          backgroundColor: isWord ? "#4B5EAA" : "#2D6A4F",
+          color: "white",
+          minWidth: isWord ? "80px" : "60px",
+          textAlign: "center",
+        }}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        role="button"
+        aria-label={`${isWord ? "Word" : "Number"}: ${item}`}
+      >
+        {item}
+      </motion.div>
+    );
+  };
+
   if (showFinalScore) {
     return (
-      <div className="p-6 max-w-md mx-auto text-center">
-        <h2 className="text-2xl font-bold mb-4">Game Completed!</h2>
-        <p className="text-xl mb-6">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="p-6 max-w-md mx-auto text-center bg-gray-50 rounded-lg"
+      >
+        <h2 className="text-2xl font-bold mb-4 text-gray-800">
+          Game Completed!
+        </h2>
+        <p className="text-xl mb-6 text-gray-700">
           Your score: {score} out of {questions.length}
         </p>
         <button
           onClick={restartGame}
-          className="bg-blue-500 text-white font-bold px-6 py-2 rounded shadow hover:bg-blue-600"
+          className="bg-blue-600 text-white font-bold px-6 py-2 rounded-lg shadow hover:bg-blue-700 transition-colors"
+          aria-label="Restart game"
         >
           Play Again
         </button>
-      </div>
+      </motion.div>
     );
   }
 
   return (
-    <div 
-      className="p-6 max-w-md mx-auto text-center"
+    <div
+      ref={containerRef}
+      className="p-6 max-w-md mx-auto bg-gray-50 rounded-lg"
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
-      <div className="flex items-center justify-center mb-4 space-x-2">
-        <span role="img" aria-label="speaker" className="text-blue-500 text-xl">
-          🔊
-        </span>
-        <h2 className="text-lg font-bold">{currentQuestion.instruction}</h2>
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center space-x-2">
+          <span role="img" aria-label="speaker" className="text-2xl">
+            🔊
+          </span>
+          <h2 className="text-lg font-semibold text-gray-800">
+            {currentQuestion.instruction}
+          </h2>
+        </div>
+        <button
+          onClick={() => setShowHint(!showHint)}
+          className="text-blue-600 hover:text-blue-800 text-sm"
+          aria-label={showHint ? "Hide hint" : "Show hint"}
+        >
+          {showHint ? "Hide Hint" : "Show Hint"}
+        </button>
       </div>
+
+      <AnimatePresence>
+        {showHint && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="mb-4 text-sm text-gray-600 italic"
+          >
+            Hint: {currentQuestion.hint}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <div className="mb-2 text-sm text-gray-600">
-        Question {currentQuestionIndex + 1} of {questions.length}
+        Question {currentQuestionIndex + 1} of {questions.length} | Score:{" "}
+        {score}
       </div>
 
-      <div className="flex flex-wrap justify-center gap-2 mb-6">
-        {currentOrder.map((num, index) => (
-          <div
-            key={index}
-            data-index={index}
-            draggable
-            onDragStart={(e) => handleDragStart(e, index)}
-            onDragOver={handleDragOver}
-            onDrop={(e) => handleDrop(e, index)}
-            onTouchStart={(e) => handleTouchStart(e, index)}
-            className={`draggable-item bg-blue-500 text-white text-lg font-semibold px-4 py-2 rounded shadow cursor-move touch-none
-              ${draggedNumber === index ? "invisible" : ""}`}
-          >
-            {num}
-          </div>
-        ))}
-      </div>
+      <motion.div layout className="flex flex-wrap justify-center gap-3 mb-6">
+        {currentOrder.map(renderItem)}
+      </motion.div>
 
-      <div className="flex flex-wrap justify-center gap-2 mb-4">
+      <div className="flex flex-wrap justify-center gap-3 mb-4">
         <button
           onClick={handleSubmit}
-          className="bg-green-500 text-white font-bold px-6 py-2 rounded shadow hover:bg-green-600"
+          className="bg-green-600 text-white font-bold px-6 py-2 rounded-lg shadow hover:bg-green-700 transition-colors"
+          aria-label="Submit answer"
         >
-          Submit
+          Check Answer
         </button>
-        {feedback && feedback.includes("❌") && (
+        {feedback && !feedback.isCorrect && (
           <button
             onClick={resetGame}
-            className="bg-blue-500 text-white font-bold px-6 py-2 rounded shadow hover:bg-blue-600"
+            className="bg-blue-600 text-white font-bold px-6 py-2 rounded-lg shadow hover:bg-blue-700 transition-colors"
+            aria-label="Try again"
           >
             Try Again
           </button>
         )}
       </div>
 
-      {feedback && (
-        <div
-          className={`mt-4 mb-6 text-xl font-bold ${
-            feedback.includes("✅") ? "text-green-600" : "text-red-600"
-          }`}
-        >
-          {feedback}
-          {feedback.includes("✅") ? (
-            <button
-              onClick={handleNextQuestion}
-              className="block mx-auto mt-4 bg-purple-500 text-white font-bold px-6 py-2 rounded shadow hover:bg-purple-600"
-            >
-              Next Question
-            </button>
-          ) : (
-            <div className="mt-2 text-sm text-gray-700">
-              Correct order: {currentQuestion.correctOrder.join(" > ")}
-            </div>
-          )}
-        </div>
-      )}
+      <AnimatePresence>
+        {feedback && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            className={`mt-4 text-lg font-semibold ${
+              feedback.isCorrect ? "text-green-600" : "text-red-600"
+            }`}
+            role="alert"
+          >
+            {feedback.message}
+            {!feedback.isCorrect && (
+              <div className="mt-2 text-sm text-gray-700">
+                Correct order: {currentQuestion.correctOrder.join(" → ")}
+              </div>
+            )}
+            {feedback.isCorrect && (
+              <button
+                onClick={handleNextQuestion}
+                className="block mx-auto mt-4 bg-purple-600 text-white font-bold px-6 py-2 rounded-lg shadow hover:bg-purple-700 transition-colors"
+                aria-label="Next question"
+              >
+                {currentQuestionIndex < questions.length - 1
+                  ? "Next Question"
+                  : "See Results"}
+              </button>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
