@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const EnglishWordSorting = ({ question, onAnswer, onNext, onReset }) => {
   const [availableWords, setAvailableWords] = useState([...question.words]);
@@ -8,12 +9,13 @@ const EnglishWordSorting = ({ question, onAnswer, onNext, onReset }) => {
     );
   });
   const [draggingWord, setDraggingWord] = useState(null);
+  const [draggingCoords, setDraggingCoords] = useState({ x: 0, y: 0 });
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
   const [showFeedback, setShowFeedback] = useState(false);
   const dropTargetRef = useRef(null);
 
-  // Text-to-speech functionality
+  // Text-to-speech
   const [isReading, setIsReading] = useState(false);
   const readAloud = (text) => {
     if ("speechSynthesis" in window && !isReading) {
@@ -24,12 +26,11 @@ const EnglishWordSorting = ({ question, onAnswer, onNext, onReset }) => {
     }
   };
 
-  // Reset all states when question changes
   useEffect(() => {
     setAvailableWords([...question.words]);
     setAnswers(
-      Object.fromEntries(Object.keys(question.answers).map((key) => [key, []])
-    ));
+      Object.fromEntries(Object.keys(question.answers).map((key) => [key, []]))
+    );
     setIsSubmitted(false);
     setIsCorrect(false);
     setShowFeedback(false);
@@ -67,7 +68,7 @@ const EnglishWordSorting = ({ question, onAnswer, onNext, onReset }) => {
     setDraggingWord(null);
   };
 
-  // Touch event handlers
+  // Touch Events
   const handleTouchStart = (word, e) => {
     e.preventDefault();
     setDraggingWord(word);
@@ -77,6 +78,8 @@ const EnglishWordSorting = ({ question, onAnswer, onNext, onReset }) => {
     if (!draggingWord) return;
 
     const touch = e.touches[0];
+    setDraggingCoords({ x: touch.clientX, y: touch.clientY });
+
     const element = document.elementFromPoint(touch.clientX, touch.clientY);
     const dropTarget = element?.closest("[data-drop-target]");
     if (dropTarget) {
@@ -95,11 +98,10 @@ const EnglishWordSorting = ({ question, onAnswer, onNext, onReset }) => {
   };
 
   const checkAnswers = () => {
-    if (availableWords.length > 0) return; // Prevent submission if not all words are sorted
+    if (availableWords.length > 0) return;
 
     setIsSubmitted(true);
 
-    // Check if all answers match
     let correct = true;
     for (const [category, correctWords] of Object.entries(question.answers)) {
       const userWords = answers[category] || [];
@@ -128,7 +130,7 @@ const EnglishWordSorting = ({ question, onAnswer, onNext, onReset }) => {
   };
 
   const renderWord = (word, isCorrectAnswer = false) => (
-    <div
+    <motion.div
       key={word}
       draggable={!showFeedback}
       onDragStart={() => handleDragStart(word)}
@@ -148,17 +150,37 @@ const EnglishWordSorting = ({ question, onAnswer, onNext, onReset }) => {
           : "bg-blue-200"
       }`}
       onClick={() => readAloud(word)}
+      layout
     >
       {word}
-    </div>
+    </motion.div>
   );
 
   return (
     <div
-      className="p-4 max-w-3xl mx-auto"
+      className="p-4 max-w-3xl mx-auto relative"
       onTouchMove={!showFeedback ? handleTouchMove : undefined}
       onTouchEnd={!showFeedback ? handleTouchEnd : undefined}
     >
+      {/* Drag preview for mobile */}
+      <AnimatePresence>
+        {draggingWord && (
+          <motion.div
+            className="fixed z-50 px-4 py-2 bg-blue-300 rounded shadow-lg pointer-events-none"
+            style={{
+              left: draggingCoords.x,
+              top: draggingCoords.y,
+              transform: "translate(-50%, -50%)",
+            }}
+            initial={{ opacity: 0.5, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.5 }}
+          >
+            {draggingWord}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {showFeedback ? (
         <div className="text-center">
           <h2
@@ -166,22 +188,25 @@ const EnglishWordSorting = ({ question, onAnswer, onNext, onReset }) => {
               isCorrect ? "text-green-600" : "text-red-600"
             }`}
           >
-            {isCorrect ? "Correct!" : "Incorrect - Here are the correct answers"}
+            {isCorrect
+              ? "Correct!"
+              : "Incorrect - Here are the correct answers"}
           </h2>
 
-          {/* Show correct answers */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-            {Object.entries(question.answers).map(([category, correctWords]) => (
-              <div
-                key={category}
-                className="p-4 border border-gray-400 rounded bg-green-50 min-h-[60px]"
-              >
-                <h3 className="font-semibold">{category}</h3>
-                <div className="flex flex-wrap mt-2">
-                  {correctWords.map((word) => renderWord(word, true))}
+            {Object.entries(question.answers).map(
+              ([category, correctWords]) => (
+                <div
+                  key={category}
+                  className="p-4 border border-gray-400 rounded bg-green-50 min-h-[60px]"
+                >
+                  <h3 className="font-semibold">{category}</h3>
+                  <div className="flex flex-wrap mt-2">
+                    {correctWords.map((word) => renderWord(word, true))}
+                  </div>
                 </div>
-              </div>
-            ))}
+              )
+            )}
           </div>
 
           <div className="flex justify-center gap-4">
@@ -199,7 +224,6 @@ const EnglishWordSorting = ({ question, onAnswer, onNext, onReset }) => {
             <h2 className="text-lg font-bold">{question.instruction}</h2>
           </div>
 
-          {/* Available Words (as Drop Zone) */}
           <div
             data-drop-target="available"
             onDragOver={(e) => e.preventDefault()}
@@ -212,7 +236,6 @@ const EnglishWordSorting = ({ question, onAnswer, onNext, onReset }) => {
             </div>
           </div>
 
-          {/* Answer Boxes */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
             {Object.keys(answers).map((key) => (
               <div
