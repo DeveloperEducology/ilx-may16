@@ -69,7 +69,8 @@ const CreateChapter = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/api/chapter", {
+      // const response = await fetch("http://localhost:5000/api/chapter", {
+      const response = await fetch("https://ilx-backend.onrender.com/api/chapter", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

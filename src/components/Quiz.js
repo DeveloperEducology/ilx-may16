@@ -5,6 +5,7 @@ import axios from "axios";
 import UploadingAnimation from "../assets/uploading.gif";
 import NumberLineQuestion from "./NumberLineQuestion";
 import EnglishWordSorting from "./EnglishWordSorting";
+import NumSortingComponent from "./NumSortingComponent";
 
 const Quiz = () => {
   const navigate = useNavigate();
@@ -240,6 +241,40 @@ const Quiz = () => {
   const renderQuestion = () => {
     switch (question?.type) {
       // In your Quiz component's renderQuestion function
+      case "num-sort":
+        return (
+          <NumSortingComponent
+            question={question}
+            onAnswer={(isCorrect) => {
+              const feedbackMessage = isCorrect
+                ? "✅ Correct! Well done!"
+                : "❌ Incorrect. Try again!";
+              setFeedback({ ...feedback, [question._id]: feedbackMessage });
+
+              if (isCorrect) {
+                setShowQuestion(false);
+                setTimeout(() => {
+                  if (currentQuestionIndex < questions.length - 1) {
+                    setCurrentQuestionIndex(currentQuestionIndex + 1);
+                    setShowQuestion(true);
+                    setFeedback({
+                      ...feedback,
+                      [questions[currentQuestionIndex + 1]?._id]: "",
+                    });
+                  } else {
+                    setFeedback({
+                      ...feedback,
+                      [question._id]: "✅ Correct! Quiz completed!",
+                    });
+                  }
+                }, 1500);
+              }
+            }}
+            onReset={() => {
+              setFeedback({ ...feedback, [question._id]: "" });
+            }}
+          />
+        );
       case "english":
         return (
           <EnglishWordSorting
@@ -758,24 +793,25 @@ const Quiz = () => {
             Question {currentQuestionIndex + 1} of {questions.length}
           </h4>
           {showQuestion ? renderQuestion() : null}
-          {question?.type !== "english" && (
-            <div>
-              {showQuestion && (
-                <button
-                  onClick={checkAnswer}
-                  disabled={!allInputsFilled()}
-                  className={`mt-4 px-6 py-2 rounded text-white font-semibold transition ${
-                    allInputsFilled()
-                      ? "bg-green-500 hover:bg-green-600"
-                      : "bg-gray-400 cursor-not-allowed"
-                  }`}
-                  aria-label="Submit answer"
-                >
-                  Submit
-                </button>
-              )}
-            </div>
-          )}
+          {question?.type !== "english" ||
+            ("num-sort" && (
+              <div>
+                {showQuestion && (
+                  <button
+                    onClick={checkAnswer}
+                    disabled={!allInputsFilled()}
+                    className={`mt-4 px-6 py-2 rounded text-white font-semibold transition ${
+                      allInputsFilled()
+                        ? "bg-green-500 hover:bg-green-600"
+                        : "bg-gray-400 cursor-not-allowed"
+                    }`}
+                    aria-label="Submit answer"
+                  >
+                    Submit
+                  </button>
+                )}
+              </div>
+            ))}
           {feedback[question?._id] && (
             <p
               className={`mt-4 text-lg ${

@@ -15,7 +15,10 @@ const CreateLesson = () => {
   useEffect(() => {
     const fetchSubjects = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/subjects");
+        // const response = await fetch("http://localhost:5000/api/subjects");
+        const response = await fetch(
+          "https://ilx-backend.onrender.com/api/subjects"
+        );
         if (!response.ok) throw new Error("Failed to fetch subjects");
         const data = await response.json();
         setSubjects(data);
@@ -27,7 +30,10 @@ const CreateLesson = () => {
 
     const fetchChapters = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/chapters");
+        const response = await fetch(
+          "https://ilx-backend.onrender.com/api/chapters"
+        );
+        // const response = await fetch("http://localhost:5000/api/chapters");
         if (!response.ok) throw new Error("Failed to fetch chapters");
         const data = await response.json();
         setChapters(data);
@@ -67,13 +73,17 @@ const CreateLesson = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/api/lesson", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      // const response = await fetch("http://localhost:5000/api/lesson", {
+      const response = await fetch(
+        "https://ilx-backend.onrender.com/api/lesson",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));

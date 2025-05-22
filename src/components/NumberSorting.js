@@ -6,8 +6,19 @@ import incorrect from "../assets/sounds/incorrect.mp3";
 
 const questions = [
   {
+    id: 8,
+    lessonId: "682e9f3fa54a951796f4a72b",
+      "type": "num-sort",
+    type: "words",
+    instruction: "Form a correct sentence by arranging these words.",
+    items: ["birds", "sing", "the", "morning", "in", "the"],
+    correctOrder: ["the", "birds", "sing", "in", "the", "morning"],
+    hint: "The sentence describes when birds perform an action.",
+  },
+  {
     id: 1,
     type: "words",
+    lessonId: "682e9f3fa54a951796f4a72b",
     instruction: "Arrange these words to form a correct sentence.",
     items: ["there", "three", "are", "cats"],
     correctOrder: ["there", "are", "three", "cats"],
@@ -16,6 +27,9 @@ const questions = [
   {
     id: 2,
     type: "numbers",
+      "type": "num-sort",
+
+    lessonId: "682e9f3fa54a951796f4a72b",
     instruction: "Sort these numbers from largest to smallest.",
     items: [51, 58, 56, 60],
     correctOrder: [60, 58, 56, 51],
@@ -24,6 +38,7 @@ const questions = [
   {
     id: 3,
     type: "numbers",
+    lessonId: "682e9f3fa54a951796f4a72b",
     instruction: "Arrange these numbers in ascending order.",
     items: [23, 12, 34],
     correctOrder: [12, 23, 34],
@@ -32,6 +47,9 @@ const questions = [
   {
     id: 4,
     type: "numbers",
+      "type": "num-sort",
+
+    lessonId: "682e9f3fa54a951796f4a72b",
     instruction: "Order these numbers from highest to lowest.",
     items: [105, 99, 110],
     correctOrder: [110, 105, 99],
@@ -40,6 +58,7 @@ const questions = [
   {
     id: 5,
     type: "numbers",
+    lessonId: "682e9f3fa54a951796f4a72b",
     instruction: "Sort these numbers in increasing order.",
     items: [7, 3, 10],
     correctOrder: [3, 7, 10],
@@ -48,43 +67,48 @@ const questions = [
   {
     id: 6,
     type: "words",
+      "type": "num-sort",
+
+    lessonId: "682e9f3fa54a951796f4a72b",
     instruction: "Arrange these words to form a correct sentence.",
     items: ["dog", "the", "runs", "fast"],
     correctOrder: ["the", "dog", "runs", "fast"],
-    hint: "The sentence describes an action of a dog."
+    hint: "The sentence describes an action of a dog.",
   },
   {
     id: 7,
     type: "numbers",
+      "type": "num-sort",
+
+    lessonId: "682e9f3fa54a951796f4a72b",
     instruction: "Sort these numbers from smallest to largest.",
     items: [42, 19, 67, 33],
     correctOrder: [19, 33, 42, 67],
-    hint: "Begin with the smallest number and proceed to the largest."
+    hint: "Begin with the smallest number and proceed to the largest.",
   },
-  {
-    id: 8,
-    type: "words",
-    instruction: "Form a correct sentence by arranging these words.",
-    items: ["birds", "sing", "the", "morning", "in"],
-    correctOrder: ["the", "birds", "sing", "in", "the", "morning"],
-    hint: "The sentence describes when birds perform an action."
-  },
+
   {
     id: 9,
     type: "numbers",
+      "type": "num-sort",
+
+    lessonId: "682e9f3fa54a951796f4a72b",
     instruction: "Order these numbers from highest to lowest.",
     items: [88, 76, 95, 82],
     correctOrder: [95, 88, 82, 76],
-    hint: "Start with the highest number."
+    hint: "Start with the highest number.",
   },
   {
     id: 10,
+      "type": "num-sort",
+
     type: "words",
+    lessonId: "682e9f3fa54a951796f4a72b",
     instruction: "Arrange these words to make a correct sentence.",
     items: ["we", "park", "to", "go", "the"],
     correctOrder: ["we", "go", "to", "the", "park"],
-    hint: "The sentence describes an action involving a destination."
-  }
+    hint: "The sentence describes an action involving a destination.",
+  },
 ];
 
 const NumberSorting = () => {
