@@ -793,8 +793,8 @@ const Quiz = () => {
             Question {currentQuestionIndex + 1} of {questions.length}
           </h4>
           {showQuestion ? renderQuestion() : null}
-          {question?.type !== "english" ||
-            ("num-sort" && (
+          {question?.type !== "english" || question?.type !== "english"
+             && (
               <div>
                 {showQuestion && (
                   <button
@@ -811,7 +811,7 @@ const Quiz = () => {
                   </button>
                 )}
               </div>
-            ))}
+            )}
           {feedback[question?._id] && (
             <p
               className={`mt-4 text-lg ${
