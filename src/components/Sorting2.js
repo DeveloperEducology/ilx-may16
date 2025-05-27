@@ -2,6 +2,24 @@ import React, { useState, useRef, useEffect } from "react";
 
 const questions = [
   {
+    instruction: "Sort the letters.",
+    lessonId: "682ff9e5d5838c0f2bfc3f80",
+    words: ["e", "p", "x"],
+    answers: {
+      "consonents": ["p", "x"],
+      "vowels": ["e"],
+    },
+  },
+  {
+    instruction: "Sort the letters.",
+    lessonId: "682ff9e5d5838c0f2bfc3f80",
+    words: ["i", "a", "p"],
+    answers: {
+      "consonents": ["p"],
+      "vowels": ["p"],
+    },
+  },
+  {
     instruction: "Sort the words by their vowel sounds.",
     lessonId: "681aecf9fb88a0487b80fbaa",
     words: ["due", "dump", "cute", "clue", "cube"],

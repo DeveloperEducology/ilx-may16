@@ -155,7 +155,7 @@ function SubjectsPage() {
       } finally {
         setTimeout(() => {
           setLoading(false);
-        }, 2000);
+        });
       }
     };
 

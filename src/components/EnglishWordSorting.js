@@ -152,7 +152,10 @@ const EnglishWordSorting = ({ question, onAnswer, onNext, onReset }) => {
       onClick={() => readAloud(word)}
       layout
     >
+      <h2>
+
       {word}
+      </h2>
     </motion.div>
   );
 

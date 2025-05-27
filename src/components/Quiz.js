@@ -6,6 +6,7 @@ import UploadingAnimation from "../assets/uploading.gif";
 import NumberLineQuestion from "./NumberLineQuestion";
 import EnglishWordSorting from "./EnglishWordSorting";
 import NumSortingComponent from "./NumSortingComponent";
+import SingleMathQuiz from "../editor/SingleMathQuiz";
 
 const Quiz = () => {
   const navigate = useNavigate();
@@ -19,6 +20,22 @@ const Quiz = () => {
   const [error, setError] = useState(null);
   const [questions, setQuestions] = useState([]);
   const [loadingImage] = useState(UploadingAnimation);
+  
+  // State for math quiz
+  const [mathAnswers, setMathAnswers] = useState({});
+  const [mathSubmitted, setMathSubmitted] = useState(false);
+  const [mathScore, setMathScore] = useState({ correct: 0, total: 0, percentage: 0 });
+
+  // Text-to-speech
+  const [isReading, setIsReading] = useState(false);
+  const readAloud = (text) => {
+    if ("speechSynthesis" in window && !isReading) {
+      setIsReading(true);
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.onend = () => setIsReading(false);
+      window.speechSynthesis.speak(utterance);
+    }
+  };
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -71,6 +88,11 @@ const Quiz = () => {
     return "";
   };
 
+  const flattenExpressions = (expressions) =>
+    expressions.flatMap((expr) =>
+      expr.children ? [expr, ...flattenExpressions(expr.children)] : [expr]
+    );
+
   const handleAnswerChange = (e, index) => {
     if (question.type === "fill-in-sequence") {
       const prevSequenceAnswers =
@@ -119,6 +141,53 @@ const Quiz = () => {
       setFeedback({ ...feedback, [question._id]: "" });
       setFilledSequences([]);
     }
+  };
+
+  const handleMathSubmit = (question) => {
+    const currentAnswers = mathAnswers[question.id] || {};
+    const inputs = flattenExpressions(question.pieces).filter(
+      (expr) => expr.objectType === "QMInput"
+    );
+
+    const correctCount = inputs.filter(
+      (input) => currentAnswers[input.id] === input.correctAnswer
+    ).length;
+
+    setMathScore({
+      correct: correctCount,
+      total: inputs.length,
+      percentage: Math.round((correctCount / inputs.length) * 100) || 0,
+    });
+    setMathSubmitted(true);
+    
+    // Provide feedback and move to next question if all correct
+    if (correctCount === inputs.length) {
+      setFeedback({
+        ...feedback,
+        [question._id]: "✅ Correct! All answers correct!",
+      });
+      
+      setShowQuestion(false);
+      setTimeout(() => {
+        if (currentQuestionIndex < questions.length - 1) {
+          setCurrentQuestionIndex((prev) => prev + 1);
+          setShowQuestion(true);
+          setFeedback({
+            ...feedback,
+            [questions[currentQuestionIndex + 1]?._id]: "",
+          });
+          setMathSubmitted(false);
+          setMathAnswers({});
+          setMathScore({ correct: 0, total: 0, percentage: 0 });
+        }
+      }, 1500);
+    }
+  };
+
+  const handleMathReset = () => {
+    setMathAnswers({});
+    setMathSubmitted(false);
+    setMathScore({ correct: 0, total: 0, percentage: 0 });
   };
 
   const checkAnswer = () => {
@@ -232,7 +301,6 @@ const Quiz = () => {
             ...feedback,
             [question._id]: "✅ Correct! Quiz completed!",
           });
-          // navigate(`/subjects/${classId}`);
         }
       }, 1500);
     }
@@ -240,7 +308,18 @@ const Quiz = () => {
 
   const renderQuestion = () => {
     switch (question?.type) {
-      // In your Quiz component's renderQuestion function
+      case "TEST":
+        return (
+          <SingleMathQuiz
+            question={question}
+            answers={mathAnswers}
+            setAnswers={setMathAnswers}
+            submitted={mathSubmitted}
+            onSubmit={handleMathSubmit}
+            onReset={handleMathReset}
+            score={mathScore}
+          />
+        );
       case "num-sort":
         return (
           <NumSortingComponent
@@ -277,67 +356,79 @@ const Quiz = () => {
         );
       case "english":
         return (
-          <EnglishWordSorting
-            question={question}
-            onAnswer={(isCorrect) => {
-              const feedbackMessage = isCorrect
-                ? "✅ Correct!"
-                : `❌ Incorrect. ${question.feedback.incorrect}`;
-              setFeedback({ ...feedback, [question._id]: feedbackMessage });
+          <>
+            <p onClick={() => readAloud(question.hint)} className="pointer">
+              Hint
+            </p>
+            <EnglishWordSorting
+              question={question}
+              onAnswer={(isCorrect) => {
+                const feedbackMessage = isCorrect
+                  ? "✅ Correct!"
+                  : `❌ Incorrect. ${question?.feedback?.incorrect}`;
+                setFeedback({ ...feedback, [question._id]: feedbackMessage });
 
-              // Initialize userAnswers if not already set
-              if (!userAnswers[question._id]) {
+                if (!userAnswers[question._id]) {
+                  setUserAnswers((prev) => ({
+                    ...prev,
+                    [question._id]: isCorrect ? "correct" : "incorrect",
+                  }));
+                }
+
+                if (isCorrect) {
+                  setShowQuestion(false);
+                  setTimeout(() => {
+                    if (currentQuestionIndex < questions.length - 1) {
+                      setCurrentQuestionIndex(currentQuestionIndex + 1);
+                      setShowQuestion(true);
+                      setFeedback({
+                        ...feedback,
+                        [questions[currentQuestionIndex + 1]?._id]: "",
+                      });
+                    } else {
+                      setFeedback({
+                        ...feedback,
+                        [question._id]: "✅ Correct! Quiz completed!",
+                      });
+                    }
+                  }, 1500);
+                }
+              }}
+              onNext={() => {
+                if (currentQuestionIndex < questions.length - 1) {
+                  setCurrentQuestionIndex(currentQuestionIndex + 1);
+                  setShowQuestion(true);
+                  setFeedback({
+                    ...feedback,
+                    [questions[currentQuestionIndex + 1]?._id]: "",
+                  });
+                }
+              }}
+              onReset={() => {
+                setFeedback({ ...feedback, [question._id]: "" });
                 setUserAnswers((prev) => ({
                   ...prev,
-                  [question._id]: isCorrect ? "correct" : "incorrect",
+                  [question._id]: "",
                 }));
-              }
-
-              if (isCorrect) {
-                setShowQuestion(false);
-                setTimeout(() => {
-                  if (currentQuestionIndex < questions.length - 1) {
-                    setCurrentQuestionIndex(currentQuestionIndex + 1);
-                    setShowQuestion(true);
-                    setFeedback({
-                      ...feedback,
-                      [questions[currentQuestionIndex + 1]?._id]: "",
-                    });
-                  } else {
-                    setFeedback({
-                      ...feedback,
-                      [question._id]: "✅ Correct! Quiz completed!",
-                    });
-                  }
-                }, 1500);
-              }
-            }}
-            onNext={() => {
-              if (currentQuestionIndex < questions.length - 1) {
-                setCurrentQuestionIndex(currentQuestionIndex + 1);
-                setShowQuestion(true);
-                setFeedback({
-                  ...feedback,
-                  [questions[currentQuestionIndex + 1]?._id]: "",
-                });
-              }
-            }}
-            onReset={() => {
-              setFeedback({ ...feedback, [question._id]: "" });
-              setUserAnswers((prev) => ({
-                ...prev,
-                [question._id]: "",
-              }));
-            }}
-          />
+              }}
+            />
+          </>
         );
       case "reasoning":
       case "single-select":
         return (
           <>
-            <p className="mb-4 text-lg whitespace-pre-line">
-              {question.prompt}
-            </p>
+            {question?.sequenceType === "html" ? (
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: DOMPurify.sanitize(question.prompt),
+                }}
+                className="mb-4"
+              />
+            ) : (
+              <p className="mb-4 text-lg">{question.prompt}</p>
+            )}
+
             {question.imageUrl?.length > 0 && (
               <div className="mb-4">
                 {question.imageUrl.map((url, idx) => (
@@ -727,7 +818,11 @@ const Quiz = () => {
   };
 
   const allInputsFilled = () => {
-    if (question?.type === "sequence") {
+    if (question?.type === "math-quiz") {
+      // For math quiz, we don't need to check if all inputs are filled
+      // because the submit button is handled by the SingleMathQuiz component
+      return false;
+    } else if (question?.type === "sequence") {
       const sequenceAnswers =
         userAnswers[question._id] || initializeUserAnswer(question);
       return sequenceAnswers.every((val) => val && val.trim() !== "");
@@ -764,6 +859,14 @@ const Quiz = () => {
     );
   }
 
+  if (error) {
+    return (
+      <div className="p-6 font-sans max-w-3xl mx-auto">
+        <div className="text-red-500 text-lg">{error}</div>
+      </div>
+    );
+  }
+
   return (
     <div className="p-6 font-sans max-w-3xl mx-auto">
       <style jsx>{`
@@ -787,77 +890,83 @@ const Quiz = () => {
         }
       `}</style>
       <div>
-        {/* <h2 className="text-2xl font-bold mb-4">Quiz</h2> */}
+        <h4 className="text-lg font-semibold mb-4">
+          Question {currentQuestionIndex + 1} of {questions.length}
+        </h4>
+        {showQuestion ? renderQuestion() : null}
+
         <div>
-          <h4 className="text-lg font-semibold mb-4">
-            Question {currentQuestionIndex + 1} of {questions.length}
-          </h4>
-          {showQuestion ? renderQuestion() : null}
-          {question?.type !== "english" || question?.type !== "english"
-             && (
-              <div>
-                {showQuestion && (
-                  <button
-                    onClick={checkAnswer}
-                    disabled={!allInputsFilled()}
-                    className={`mt-4 px-6 py-2 rounded text-white font-semibold transition ${
-                      allInputsFilled()
-                        ? "bg-green-500 hover:bg-green-600"
-                        : "bg-gray-400 cursor-not-allowed"
-                    }`}
-                    aria-label="Submit answer"
-                  >
-                    Submit
-                  </button>
-                )}
-              </div>
+          {showQuestion &&
+            !["english", "num-sort", "TEST" ].includes(question?.type) && (
+              <button
+                onClick={checkAnswer}
+                disabled={!allInputsFilled()}
+                className={`
+                  mt-4 px-6 py-2 rounded text-white font-semibold transition
+                  ${
+                    allInputsFilled()
+                      ? "bg-green-500 hover:bg-green-600"
+                      : "bg-gray-400 cursor-not-allowed"
+                  }
+                `}
+                aria-label="Submit answer"
+                type="button"
+              >
+                Submit
+              </button>
             )}
-          {feedback[question?._id] && (
-            <p
-              className={`mt-4 text-lg ${
-                feedback[question?._id].startsWith("✅")
-                  ? "text-green-600"
-                  : "text-red-600"
-              }`}
-            >
-              {feedback[question?._id]}
-            </p>
-          )}
-          {showQuestion && (
-            <div className="mt-6 flex gap-4">
-              <button
-                onClick={() =>
-                  setCurrentQuestionIndex((prev) => Math.max(prev - 1, 0))
-                }
-                disabled={currentQuestionIndex === 0}
-                className={`px-6 py-2 rounded text-white font-semibold transition ${
-                  currentQuestionIndex === 0
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-blue-500 hover:bg-blue-600"
-                }`}
-                aria-label="Previous question"
-              >
-                Previous
-              </button>
-              <button
-                onClick={() =>
-                  setCurrentQuestionIndex((prev) =>
-                    Math.min(prev + 1, questions.length - 1)
-                  )
-                }
-                disabled={currentQuestionIndex === questions.length - 1}
-                className={`px-6 py-2 rounded text-white font-semibold transition ${
-                  currentQuestionIndex === questions.length - 1
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-blue-500 hover:bg-blue-600"
-                }`}
-                aria-label="Next question"
-              >
-                Next
-              </button>
-            </div>
-          )}
         </div>
+        {feedback[question?._id] && (
+          <p
+            className={`mt-4 text-lg ${
+              feedback[question?._id].startsWith("✅")
+                ? "text-green-600"
+                : "text-red-600"
+            }`}
+          >
+            {feedback[question?._id]}
+          </p>
+        )}
+        {showQuestion && (
+          <div className="mt-6 flex gap-4">
+            <button
+              onClick={() => {
+                setCurrentQuestionIndex((prev) => Math.max(prev - 1, 0));
+                setMathSubmitted(false);
+                setMathAnswers({});
+                setMathScore({ correct: 0, total: 0, percentage: 0 });
+              }}
+              disabled={currentQuestionIndex === 0}
+              className={`px-6 py-2 rounded text-white font-semibold transition ${
+                currentQuestionIndex === 0
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-blue-500 hover:bg-blue-600"
+              }`}
+              aria-label="Previous question"
+            >
+              Previous
+            </button>
+            <button
+              onClick={() => {
+                setCurrentQuestionIndex((prev) =>
+                  Math.min(prev + 1, questions.length - 1)
+                );
+                setMathSubmitted(false);
+                setMathAnswers({});
+                setMathScore({ correct: 0, total: 0, percentage: 0 });
+              }}
+              disabled={currentQuestionIndex === questions.length - 1}
+              className={`px-6 py-2 rounded text-white font-semibold transition ${
+                currentQuestionIndex === questions.length - 1
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-blue-500 hover:bg-blue-600"
+              }`}
+              aria-label="Next question"
+            >
+              Next
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

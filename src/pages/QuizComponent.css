@@ -1,0 +1,273 @@
+/* QuizComponents.css */
+
+/* Base container for all quiz components */
+.quiz-container {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+}
+
+
+.image-container {
+  text-align: center;
+  width: 200px; /* or set as needed */
+  border: 2px solid lightblue;
+  padding: 10px;
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+.option-image {
+  width: 100%;
+  height: auto;
+}
+
+.image-label {
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 8px;
+}
+
+
+.quiz-component {
+  max-width: 100%;
+  margin: 20px auto;
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    sans-serif;
+}
+
+/* Prompt styling */
+.prompt {
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin-bottom: 24px;
+  line-height: 1.5;
+  color: #333;
+}
+
+/* Options containers */
+.options-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.options-container {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+/* Text options styling */
+.text-options .option {
+  padding: 12px 24px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: #f8f9fa;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.text-options .option:hover {
+  background-color: #e9ecef;
+  border-color: #adb5bd;
+}
+
+/* Image options styling */
+.image-options {
+  justify-content: center;
+  padding: auto;
+}
+
+.image-option {
+  width: 150px;
+  height: 150px;
+  border: 3px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.image-option:hover {
+  border-color: #adb5bd;
+}
+
+.option-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Option buttons */
+.option-button {
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 500;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: #f8f9fa;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #333;
+  min-width: 80px;
+  text-align: center;
+}
+
+.option-button:hover:not(:disabled) {
+  background-color: #e9ecef;
+  border-color: #adb5bd;
+}
+
+.option-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Selection states - works for both buttons and div options */
+.option-button.selected,
+.option.selected {
+  background-color: #d0ebff;
+  border-color: #4dabf7;
+  color: #1971c2;
+}
+
+.option-button.correct,
+.option.correct {
+  background-color: #d3f9d8;
+  border-color: #40c057;
+  color: #2b8a3e;
+}
+
+.option-button.incorrect,
+.option.incorrect {
+  background-color: #ffd3d3;
+  border-color: #ff6b6b;
+  color: #c92a2a;
+}
+
+/* Selected state for image options */
+.option.selected {
+  border-color: #4dabf7;
+  box-shadow: 0 0 0 3px rgba(77, 171, 247, 0.3);
+}
+
+/* Correct state for image options */
+.option.correct {
+  border-color: #40c057;
+  box-shadow: 0 0 0 3px rgba(64, 192, 87, 0.3);
+}
+
+/* Incorrect state for image options */
+.option.incorrect {
+  border-color: #ff6b6b;
+  box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.3);
+}
+
+/* Input container for FillBlank */
+.input-container {
+  margin-bottom: 24px;
+}
+
+/* Input field for FillBlank */
+.answer-input {
+  padding: 12px 16px;
+  font-size: 1rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 300px;
+  background-color: #f8f9fa;
+  color: #333;
+  transition: border-color 0.2s ease;
+}
+
+.answer-input:focus {
+  outline: none;
+  border-color: #4dabf7;
+  box-shadow: 0 0 0 3px rgba(77, 171, 247, 0.2);
+}
+
+.answer-input:disabled {
+  background-color: #e9ecef;
+  cursor: not-allowed;
+}
+
+/* Action buttons (Submit and Next) */
+.action-button {
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 8px;
+  background-color: #4dabf7;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.action-button:hover:not(:disabled) {
+  background-color: #339af0;
+}
+
+.action-button:disabled {
+  background-color: #adb5bd;
+  cursor: not-allowed;
+}
+
+/* Feedback text */
+.feedback {
+  margin-top: 20px;
+  padding: 16px;
+  font-size: 1rem;
+  border-radius: 8px;
+  background-color: #f8f9fa;
+  color: #333;
+  border-left: 4px solid #4dabf7;
+}
+
+/* Quiz complete message */
+.quiz-complete {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #333;
+  padding: 40px;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .options-row,
+  .options-container {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .option-button,
+  .text-options .option {
+    width: 100%;
+  }
+  
+  .image-option {
+    width: 150px;
+    height: 150px;
+  }
+  
+  .quiz-component {
+    padding: 20px;
+  }
+  
+  .prompt {
+    font-size: 1.1rem;
+  }
+}

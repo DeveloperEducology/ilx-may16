@@ -26,7 +26,6 @@ export const questions = [
     text: "Fill the blank with the correct number.",
     question: ["50 null 70 80 90 100"],
     correctAnswers: ["60"],
-
   },
   {
     type: "sequence",
@@ -34,7 +33,6 @@ export const questions = [
     text: "Fill the blank with the correct number.",
     question: ["2 null 4 5 6 7"],
     correctAnswers: ["3"],
-
   },
   {
     type: "sequence",
@@ -42,7 +40,6 @@ export const questions = [
     text: "Fill the blank with the correct number.",
     question: ["2 null 6 8 10 12"],
     correctAnswers: ["4"],
-
   },
   {
     type: "fill-in",
@@ -63,7 +60,7 @@ export const questions = [
     correctAnswer: "40",
   },
 
-{
+  {
     type: "fill-in",
     lessonId: "681113fea6aafb33e7aed374",
     sequenceType: "html",
@@ -73,12 +70,9 @@ export const questions = [
       "https://ckbox.cloud/2430c95ef44b15251e92/assets/x2Uz70Lu4lUt/images/466.webp",
       "https://ckbox.cloud/2430c95ef44b15251e92/assets/x2Uz70Lu4lUt/images/466.webp",
       "https://ckbox.cloud/2430c95ef44b15251e92/assets/x2Uz70Lu4lUt/images/466.webp",
-      "https://ckbox.cloud/2430c95ef44b15251e92/assets/x2Uz70Lu4lUt/images/466.webp"
-    ]
-},
-
-
-
+      "https://ckbox.cloud/2430c95ef44b15251e92/assets/x2Uz70Lu4lUt/images/466.webp",
+    ],
+  },
 
   {
     type: "fill-in",
@@ -507,5 +501,21 @@ export const questions = [
       "https://www.fastandup.in/nutrition-world/wp-content/uploads/2023/06/fruit-min.png",
     ],
     style: { height: "200px", width: "200px" },
+  },
+  {
+    type: "single-select",
+    lessonId: '682ffa3fd5838c0f2bfc3f92',
+    prompt: `<p>
+    <span style="background-color:#ffebee;">Find <strong>one</strong> vowel</span>
+</p>
+<p>
+    <span style="font-size:22px;"><strong>E G G</strong></span>
+</p>
+<p>
+    &nbsp;
+</p>`,
+    options: ["A", "E", "I", "O", "U"],
+    correctAnswerIndex: 1,
+    imageUrl: [],
   },
 ];

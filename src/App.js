@@ -45,6 +45,11 @@ import QuizAppModal from "./components/QuizAppModal";
 import Quiz from "./components/Quiz";
 import BlankNumberLine from "./pages/BlankNumberLine.js";
 import NumberSorting from "./components/NumberSorting.js";
+import PhoneticsComponent from "./components/Phonetics.js";
+import QuizManager from "./pages/QuizManager.js";
+import MathEditor from "./editor/MathEditor.js";
+import EditorWithMathRenderer from "./editor/EditorWithMathRenderer.js";
+import Math from "./editor/Math.js";
 
 // Create a wrapper component to use useLocation
 const HeaderWrapper = () => {
@@ -75,8 +80,13 @@ function App() {
             <HeaderWrapper />
             <Routes>
               <Route path="/" element={<Home />} />
+              {/* <Route path="/editor" element={<MathEditor />} /> */}
+              <Route path="/editor" element={<EditorWithMathRenderer />} />
+              <Route path="/math-quiz" element={<Math />} />
+              <Route path="/phonetics" element={<PhoneticsComponent />} />
               <Route path="/create-chapter" element={<CreateChapter />} />
               <Route path="/create-lesson" element={<CreateLesson />} />
+              <Route path="/test" element={<QuizManager />} />
               {/* <Route path="/quiz" element={<Quiz />} /> */}
               <Route path="/modal" element={<QuizAppModal />} />
               <Route path="/html" element={<QuizHtml />} />
@@ -115,10 +125,7 @@ function App() {
               <Route path="/data" element={<GoogleSheetData />} />
               <Route path="/blank" element={<BlankQuestionComponent />} />
               <Route path="/new" element={<QuestionForm />} />
-              <Route
-                path="/number-line"
-                element={<NumberLinePage />}
-              />
+              <Route path="/number-line" element={<NumberLinePage />} />
               <Route path="/iblank" element={<IBlnak />} />
               <Route path="/numsort" element={<NumberSorting />} />
               <Route
