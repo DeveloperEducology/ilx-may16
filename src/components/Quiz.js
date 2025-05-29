@@ -47,8 +47,8 @@ const Quiz = () => {
       setLoading(true);
       try {
         const questionsRes = await axios.get(
-          `https://ilx-backend.onrender.com/api/questions?lessonId=${lessonId}`
-          // `http://localhost:5000/api/questions?lessonId=${lessonId}`
+          // `https://ilx-backend.onrender.com/api/questions?lessonId=${lessonId}`
+          `http://localhost:5000/api/questions?lessonId=${lessonId}`
         );
         console.log("Response from API:", questionsRes.data);
         const fetchedQuestions = questionsRes.data;
@@ -952,7 +952,9 @@ const Quiz = () => {
 
         <div>
           {showQuestion &&
-            !["english", "num-sort", "TEST", "SINGLE_SELECT"].includes(question?.type) && (
+            !["english", "num-sort", "TEST", "SINGLE_SELECT"].includes(
+              question?.type
+            ) && (
               <button
                 onClick={checkAnswer}
                 disabled={!allInputsFilled()}
@@ -982,7 +984,7 @@ const Quiz = () => {
             {feedback[question?._id]}
           </p>
         )}
-        {showQuestion && (
+        {showQuestion && !["SINGLE_SELECT"].includes(question?.type) && (
           <div className="mt-6 flex gap-4">
             <button
               onClick={goToPreviousQuestion}
