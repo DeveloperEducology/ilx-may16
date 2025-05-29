@@ -47,8 +47,8 @@ const Quiz = () => {
       setLoading(true);
       try {
         const questionsRes = await axios.get(
-          // `https://ilx-backend.onrender.com/api/questions?lessonId=${lessonId}`
-          `http://localhost:5000/api/questions?lessonId=${lessonId}`
+          `https://ilx-backend.onrender.com/api/questions?lessonId=${lessonId}`
+          // `http://localhost:5000/api/questions?lessonId=${lessonId}`
         );
         console.log("Response from API:", questionsRes.data);
         const fetchedQuestions = questionsRes.data;
