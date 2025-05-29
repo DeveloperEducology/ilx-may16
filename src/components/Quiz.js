@@ -7,6 +7,7 @@ import NumberLineQuestion from "./NumberLineQuestion";
 import EnglishWordSorting from "./EnglishWordSorting";
 import NumSortingComponent from "./NumSortingComponent";
 import SingleMathQuiz from "../editor/SingleMathQuiz";
+import SingleSelect from "../pages/SingleSelect";
 
 const Quiz = () => {
   const navigate = useNavigate();
@@ -20,11 +21,15 @@ const Quiz = () => {
   const [error, setError] = useState(null);
   const [questions, setQuestions] = useState([]);
   const [loadingImage] = useState(UploadingAnimation);
-  
+
   // State for math quiz
   const [mathAnswers, setMathAnswers] = useState({});
   const [mathSubmitted, setMathSubmitted] = useState(false);
-  const [mathScore, setMathScore] = useState({ correct: 0, total: 0, percentage: 0 });
+  const [mathScore, setMathScore] = useState({
+    correct: 0,
+    total: 0,
+    percentage: 0,
+  });
 
   // Text-to-speech
   const [isReading, setIsReading] = useState(false);
@@ -42,7 +47,8 @@ const Quiz = () => {
       setLoading(true);
       try {
         const questionsRes = await axios.get(
-          `https://ilx-backend.onrender.com/api/questions?lessonId=${lessonId}`
+          // `https://ilx-backend.onrender.com/api/questions?lessonId=${lessonId}`
+          `http://localhost:5000/api/questions?lessonId=${lessonId}`
         );
         console.log("Response from API:", questionsRes.data);
         const fetchedQuestions = questionsRes.data;
@@ -159,14 +165,14 @@ const Quiz = () => {
       percentage: Math.round((correctCount / inputs.length) * 100) || 0,
     });
     setMathSubmitted(true);
-    
+
     // Provide feedback and move to next question if all correct
     if (correctCount === inputs.length) {
       setFeedback({
         ...feedback,
         [question._id]: "✅ Correct! All answers correct!",
       });
-      
+
       setShowQuestion(false);
       setTimeout(() => {
         if (currentQuestionIndex < questions.length - 1) {
@@ -189,6 +195,15 @@ const Quiz = () => {
     setMathSubmitted(false);
     setMathScore({ correct: 0, total: 0, percentage: 0 });
   };
+
+  useEffect(() => {
+    // Reset all relevant states when question changes
+    setFilledSequences([]);
+    setFeedback((prev) => ({ ...prev, [question?._id]: "" }));
+    setMathSubmitted(false);
+    setMathAnswers({});
+    setMathScore({ correct: 0, total: 0, percentage: 0 });
+  }, [currentQuestionIndex, question?._id]);
 
   const checkAnswer = () => {
     let isCorrect = false;
@@ -308,6 +323,32 @@ const Quiz = () => {
 
   const renderQuestion = () => {
     switch (question?.type) {
+      case "SINGLE_SELECT":
+        return (
+          <SingleSelect
+            data={{
+              prompt: question.prompt,
+              options: question.options || [],
+              feedback: question.feedback || {
+                correct: "Correct!",
+                incorrect: "Incorrect, please try again.",
+              },
+            }}
+            onNext={(isCorrect) => {
+              setUserAnswers({ ...userAnswers, [question._id]: isCorrect });
+              if (isCorrect) {
+                setShowQuestion(false);
+                setTimeout(() => {
+                  if (currentQuestionIndex < questions.length - 1) {
+                    setCurrentQuestionIndex((prev) => prev + 1);
+                    setShowQuestion(true);
+                  }
+                }, 1500);
+              }
+            }}
+          />
+        );
+
       case "TEST":
         return (
           <SingleMathQuiz
@@ -847,6 +888,20 @@ const Quiz = () => {
     );
   };
 
+  const goToPreviousQuestion = () => {
+    if (currentQuestionIndex > 0) {
+      setCurrentQuestionIndex(currentQuestionIndex - 1);
+      setShowQuestion(true);
+    }
+  };
+
+  const goToNextQuestion = () => {
+    if (currentQuestionIndex < questions.length - 1) {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+      setShowQuestion(true);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -897,7 +952,7 @@ const Quiz = () => {
 
         <div>
           {showQuestion &&
-            !["english", "num-sort", "TEST" ].includes(question?.type) && (
+            !["english", "num-sort", "TEST"].includes(question?.type) && (
               <button
                 onClick={checkAnswer}
                 disabled={!allInputsFilled()}
@@ -930,12 +985,7 @@ const Quiz = () => {
         {showQuestion && (
           <div className="mt-6 flex gap-4">
             <button
-              onClick={() => {
-                setCurrentQuestionIndex((prev) => Math.max(prev - 1, 0));
-                setMathSubmitted(false);
-                setMathAnswers({});
-                setMathScore({ correct: 0, total: 0, percentage: 0 });
-              }}
+              onClick={goToPreviousQuestion}
               disabled={currentQuestionIndex === 0}
               className={`px-6 py-2 rounded text-white font-semibold transition ${
                 currentQuestionIndex === 0
@@ -947,14 +997,7 @@ const Quiz = () => {
               Previous
             </button>
             <button
-              onClick={() => {
-                setCurrentQuestionIndex((prev) =>
-                  Math.min(prev + 1, questions.length - 1)
-                );
-                setMathSubmitted(false);
-                setMathAnswers({});
-                setMathScore({ correct: 0, total: 0, percentage: 0 });
-              }}
+              onClick={goToNextQuestion}
               disabled={currentQuestionIndex === questions.length - 1}
               className={`px-6 py-2 rounded text-white font-semibold transition ${
                 currentQuestionIndex === questions.length - 1
