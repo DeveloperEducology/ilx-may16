@@ -24,7 +24,9 @@ const Option = memo(({ option, index, isSelected, submitted, onSelect }) => {
       aria-checked={isSelected}
       aria-label={`Option ${alphabet}: ${option.text || "Image option"}`}
       tabIndex={0}
-      onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && !submitted && onSelect(option)}
+      onKeyDown={(e) =>
+        (e.key === "Enter" || e.key === " ") && !submitted && onSelect(option)
+      }
     >
       {/* Option Letter Badge */}
       <div
@@ -45,7 +47,10 @@ const Option = memo(({ option, index, isSelected, submitted, onSelect }) => {
           src={option.image}
           alt={`Option ${alphabet}`}
           className="w-full max-h-32 object-contain rounded-md mb-2"
-          onError={(e) => (e.target.src = "https://via.placeholder.com/150?text=Image+Not+Found")}
+          onError={(e) =>
+            (e.target.src =
+              "https://via.placeholder.com/150?text=Image+Not+Found")
+          }
         />
       ) : (
         <div className="text-base font-medium text-gray-700 text-center py-2">
@@ -85,14 +90,16 @@ const Feedback = memo(({ isCorrect, feedback }) => (
     ) : (
       <div>
         <p className="font-semibold">❌ Incorrect answer</p>
-        <p className="mt-2">{feedback?.incorrect || "Please try again with another question."}</p>
+        <p className="mt-2">
+          {feedback?.incorrect || "Please try again with another question."}
+        </p>
       </div>
     )}
   </div>
 ));
 
 // Main SingleSelect component
-const SingleSelect = ({ data, onNext }) => {
+const SingleSelect = ({ data, onNext, }) => {
   const [selected, setSelected] = useState(null);
   const [submitted, setSubmitted] = useState(false);
 
@@ -143,7 +150,10 @@ const SingleSelect = ({ data, onNext }) => {
 
       {/* Options Grid */}
       {options.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4" role="radiogroup">
+        <div
+          className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+          role="radiogroup"
+        >
           {options.map((option, index) => (
             <Option
               key={index}
@@ -163,33 +173,43 @@ const SingleSelect = ({ data, onNext }) => {
 
       {/* Action Buttons */}
       <div className="mt-8 flex justify-center gap-4">
-        {!submitted ? (
-          <button
-            onClick={handleSubmit}
-            className={`
+        {
+          !submitted ? (
+            <button
+              onClick={handleSubmit}
+              className={`
               px-8 py-3 rounded-lg text-white font-semibold transition-all duration-300
-              ${selected !== null ? "bg-green-600 hover:bg-green-700" : "bg-gray-400 cursor-not-allowed"}
+              ${
+                selected !== null
+                  ? "bg-green-600 hover:bg-green-700"
+                  : "bg-gray-400 cursor-not-allowed"
+              }
             `}
-            disabled={selected === null}
-            aria-label="Submit answer"
-          >
-            Submit
-          </button>
-        ) : null
-        // (
-        //   <button
-        //     onClick={handleNext}
-        //     className="px-8 py-3 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-all duration-300"
-        //     aria-label="Next question"
-        //   >
-        //     Next Question
-        //   </button>
-        // )
+              disabled={selected === null}
+              aria-label="Submit answer"
+            >
+              Submit
+            </button>
+          ) :
+          (
+            <button
+              onClick={handleNext}
+              className="px-8 py-3 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-all duration-300"
+              aria-label="Next question"
+            >
+              Next Question
+            </button>
+          )
         }
       </div>
 
       {/* Enhanced Feedback */}
-      {submitted && <Feedback isCorrect={selected?.isCorrect} feedback={safeData.feedback} />}
+      {submitted && (
+        <Feedback
+          isCorrect={selected?.isCorrect}
+          feedback={safeData.feedback}
+        />
+      )}
     </div>
   );
 };
