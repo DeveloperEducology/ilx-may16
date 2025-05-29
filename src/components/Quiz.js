@@ -952,7 +952,7 @@ const Quiz = () => {
 
         <div>
           {showQuestion &&
-            !["english", "num-sort", "TEST"].includes(question?.type) && (
+            !["english", "num-sort", "TEST", "SINGLE_SELECT"].includes(question?.type) && (
               <button
                 onClick={checkAnswer}
                 disabled={!allInputsFilled()}
