@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 
 const questions = [
   {
@@ -8,6 +8,7 @@ const questions = [
       "Select points to create endpoints, then connect them to draw a line. Click endpoints to toggle open/closed.",
     graph: {
       type: "number_line",
+      range: [-5, 5],
       solution: { interval: [1, "∞"], closed: false },
     },
     correctAnswers: [2, 4, 6, 8],
@@ -20,6 +21,7 @@ const questions = [
       "Select points to create endpoints, then connect them to draw a line. Click endpoints to toggle open/closed.",
     graph: {
       type: "number_line",
+      range: [-3, 3],
       solution: { interval: ["-∞", 1], closed: false },
     },
     correctAnswers: [2, 4, 6, 8],
@@ -32,6 +34,7 @@ const questions = [
       "Select points to create endpoints, then connect them to draw a line. Click endpoints to toggle open/closed.",
     graph: {
       type: "number_line",
+      range: [-5, 5],
 
       solution: { interval: ["-∞", -2], closed: true },
     },
@@ -45,7 +48,7 @@ const questions = [
       "Select points to create endpoints, then connect them to draw a line. Click endpoints to toggle open/closed.",
     graph: {
       type: "number_line",
-
+      range: [-5, 0],
       solution: { interval: ["-∞", -2], closed: true },
     },
     correctAnswers: [2, 4, 6, 8],
@@ -58,7 +61,7 @@ const questions = [
       "Select points to create endpoints, then connect them to draw a line. Click endpoints to toggle open/closed.",
     graph: {
       type: "number_line",
-
+      range: [-5, 10],
       solution: { interval: ["-∞", 8], closed: true },
     },
     correctAnswers: [2, 4, 6, 8],
@@ -72,6 +75,7 @@ const questions = [
       "Select points to create endpoints, then connect them to draw a line. Click endpoints to toggle open/closed.",
     graph: {
       type: "number_line",
+      range: [-3, 3],
       solution: { interval: ["-∞", 1], closed: false },
     },
     correctAnswers: [2, 4, 6, 8],
@@ -84,6 +88,7 @@ const questions = [
       "Select points to create endpoints, then connect them to draw a line. Click endpoints to toggle open/closed.",
     graph: {
       type: "number_line",
+      range: [-5, 5],
       solution: { interval: ["-∞", -3], closed: false },
     },
     correctAnswers: [2, 4, 6, 8],
@@ -96,10 +101,55 @@ const questions = [
       "Select points to create endpoints, then connect them to draw a line. Click endpoints to toggle open/closed.",
     graph: {
       type: "number_line",
+      range: [-5, 5],
       solution: { interval: [-1, "∞"], closed: true },
     },
     correctAnswers: [2, 4, 6, 8],
     answer: { type: "interval", value: "x ≥ -1" },
+  },
+  {
+    question: "Solve the inequality and graph the solution.",
+    inequality: "2x + 3 > 5",
+    instructions: "Graph the solution on the number line.",
+    graph: {
+      type: "number_line",
+      range: [-5, 5],
+      solution: { interval: [1, "∞"], closed: false },
+    },
+    answer: { type: "interval", value: "x > 1" },
+  },
+  {
+    question: "Solve the inequality and graph the solution.",
+    inequality: "(f - 3)/-2 > 1",
+    instructions: "Graph the solution on the number line.",
+    graph: {
+      type: "number_line",
+      range: [-3, 3],
+      solution: { interval: ["-∞", 1], closed: false },
+    },
+    answer: { type: "interval", value: "f < 1" },
+  },
+  {
+    question: "Select odd numbers after 3.",
+    inequality: "",
+    instructions: "Select points on the number line.",
+    graph: {
+      type: "number_line",
+      range: [0, 10],
+      solution: { interval: [5, 9], closed: true },
+    },
+    answer: { type: "points", value: "5, 7, 9" },
+  },
+  {
+    question: "Solve the inequality and graph the solution.",
+    inequality: "5(a + 4) - 8 ≤ 2",
+    instructions: "Graph the solution on the number line.",
+    graph: {
+      type: "number_line",
+      range: [-5, 0],
+      solution: { interval: ["-∞", -2], closed: true },
+    },
+    answer: { type: "interval", value: "a ≤ -2" },
   },
 ];
 
@@ -116,23 +166,42 @@ const InteractiveNumberLine = () => {
   const [correctAnswers, setCorrectAnswers] = useState(
     Array(questions.length).fill(0)
   );
+  const [dimensions, setDimensions] = useState({ width: 600, height: 120 });
+
   const svgRef = useRef(null);
-  const chartRef = useRef(null);
+  const containerRef = useRef(null);
 
-  console.log(points, lines);
+  // Handle responsive sizing
+  useEffect(() => {
+    const updateDimensions = () => {
+      if (containerRef.current) {
+        const width = Math.min(600, containerRef.current.offsetWidth - 40);
+        setDimensions({ width, height: 120 });
+      }
+    };
 
-  const width = 600;
-  const height = 120;
-  const scale = width / 20;
-  const centerY = height / 2;
+    updateDimensions();
+    window.addEventListener("resize", updateDimensions);
+    return () => window.removeEventListener("resize", updateDimensions);
+  }, []);
 
-  const toSvgX = useCallback((value) => (value + 10) * scale, [scale]);
+  const currentQuestion = questions[currentQuestionIndex];
+  const { range } = currentQuestion.graph;
+  const [minValue, maxValue] = range;
+  const valueRange = maxValue - minValue;
+  const scale = dimensions.width / valueRange;
+  const centerY = dimensions.height / 2;
+
+  const toSvgX = useCallback(
+    (value) => (value - minValue) * scale,
+    [minValue, scale]
+  );
+
   const toValue = useCallback(
     (svgX) => {
-      const value = svgX / scale - 10;
-      return Math.round(value * 4) / 4; // Precision to 0.25
+      return Math.round(svgX / scale + minValue);
     },
-    [scale]
+    [minValue, scale]
   );
 
   const handleMouseDown = useCallback(
@@ -142,8 +211,9 @@ const InteractiveNumberLine = () => {
       const svgY = e.clientY - rect.top;
       let value = toValue(svgX);
 
-      if (value < -10 || value > 10) return;
+      if (value < minValue || value > maxValue) return;
 
+      // Check if clicked on an endpoint
       const clickedEndpoint = lines
         .flatMap((line, index) => [
           { value: line[0], index, side: "start" },
@@ -160,6 +230,7 @@ const InteractiveNumberLine = () => {
         return;
       }
 
+      // Check if clicked on a line to remove it
       const clickedLine = lines.findIndex(([start, end]) => {
         const x1 = toSvgX(start);
         const x2 = toSvgX(end);
@@ -177,6 +248,7 @@ const InteractiveNumberLine = () => {
         return;
       }
 
+      // Check if clicked on an existing point
       const clickedPointIndex = points.findIndex(
         (p) => Math.abs(toSvgX(p) - svgX) < 10
       );
@@ -190,44 +262,31 @@ const InteractiveNumberLine = () => {
           setSelectedPoints(newSelected);
           if (newSelected.length === 2) {
             setLines([...lines, [newSelected[0], newSelected[1]]]);
+            setPoints(points.filter((p) => !newSelected.includes(p)));
             setSelectedPoints([]);
           }
         }
         return;
       }
 
+      // Add new point (only at integer positions)
       setPoints((prev) => [...prev, value]);
       setSelectedPoints((prev) => [...prev, value]);
     },
-    [points, lines, selectedPoints, toSvgX, toValue, centerY]
+    [
+      points,
+      lines,
+      selectedPoints,
+      toSvgX,
+      toValue,
+      centerY,
+      minValue,
+      maxValue,
+    ]
   );
-
-  const handleCheck = useCallback(() => {
-    const currentQuestion = questions[currentQuestionIndex];
-    if (!currentQuestion || !currentQuestion.correctAnswers) {
-      setFeedback("No correct answers specified for this question.");
-      setIsCorrect(false);
-      return;
-    }
-    const correct = currentQuestion.correctAnswers;
-    const selected = selectedPoints.slice().sort((a, b) => a - b);
-    const correctSorted = correct.slice().sort((a, b) => a - b);
-
-    if (
-      selected.length === correctSorted.length &&
-      selected.every((val, idx) => Math.abs(val - correctSorted[idx]) < 0.01)
-    ) {
-      setFeedback("Correct points selected!");
-      setIsCorrect(true);
-    } else {
-      setFeedback("Incorrect points. Try again.");
-      setIsCorrect(false);
-    }
-  }, [currentQuestionIndex, selectedPoints]);
 
   const checkAnswer = useCallback(() => {
     const currentQuestion = questions[currentQuestionIndex];
-    const correctAnswers = currentQuestion.correctAnswers || [];
     if (!currentQuestion) {
       setFeedback("No question available.");
       setIsCorrect(false);
@@ -273,7 +332,7 @@ const InteractiveNumberLine = () => {
     if (start === "-∞" && end !== "∞") {
       drawnClosed = !endpointTypes[endKey];
       const endpointDiff = Math.abs(max - end);
-      if (endpointDiff >= 0.25) {
+      if (endpointDiff >= 1) {
         feedbackMessage.push(
           `Endpoint value incorrect. Expected ${end}, got ${max}.`
         );
@@ -289,13 +348,11 @@ const InteractiveNumberLine = () => {
         );
       }
       isAnswerCorrect =
-        endpointDiff < 0.25 &&
-        lineDirection === "left" &&
-        drawnClosed === closed;
+        endpointDiff < 1 && lineDirection === "left" && drawnClosed === closed;
     } else if (end === "∞" && start !== "-∞") {
       drawnClosed = !endpointTypes[startKey];
       const endpointDiff = Math.abs(min - start);
-      if (endpointDiff >= 0.25) {
+      if (endpointDiff >= 1) {
         feedbackMessage.push(
           `Endpoint value incorrect. Expected ${start}, got ${min}.`
         );
@@ -311,9 +368,7 @@ const InteractiveNumberLine = () => {
         );
       }
       isAnswerCorrect =
-        endpointDiff < 0.25 &&
-        lineDirection === "right" &&
-        drawnClosed === closed;
+        endpointDiff < 1 && lineDirection === "right" && drawnClosed === closed;
     } else {
       setFeedback("Invalid interval format.");
       setIsCorrect(false);
@@ -363,15 +418,47 @@ const InteractiveNumberLine = () => {
     resetState();
   }, [resetState]);
 
-  const currentQuestion = questions[currentQuestionIndex];
+  const renderTicks = () => {
+    const ticks = [];
+    for (let value = minValue; value <= maxValue; value++) {
+      const x = toSvgX(value);
+      ticks.push(
+        <g key={`tick-${value}`}>
+          <line
+            x1={x}
+            y1={centerY - 10}
+            x2={x}
+            y2={centerY + 10}
+            stroke="black"
+            strokeWidth="1"
+          />
+          <text x={x} y={centerY + 25} textAnchor="middle" fontSize="12">
+            {value}
+          </text>
+          <circle
+            cx={x}
+            cy={centerY}
+            r="8"
+            fill="transparent"
+            stroke="transparent"
+            strokeWidth="2"
+            className="cursor-pointer hover:stroke-gray-300"
+          />
+        </g>
+      );
+    }
+    return ticks;
+  };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg">
+    <div
+      ref={containerRef}
+      className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg"
+    >
       <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">
-        Inequality Quiz Number Line
+        Interactive Number Line
       </h2>
 
-      {/* Question and instructions section */}
       <div className="mb-6 bg-gray-50 p-4 rounded-lg">
         <p className="text-lg text-gray-700 mb-2">
           {currentQuestion.instructions}
@@ -382,17 +469,18 @@ const InteractiveNumberLine = () => {
           </strong>{" "}
           {currentQuestion.question}
         </div>
-        <div className="text-lg text-gray-800 mb-2">
-          Inequality:{" "}
-          <span className="font-mono">{currentQuestion.inequality}</span>
-        </div>
+        {currentQuestion.inequality && (
+          <div className="text-lg text-gray-800 mb-2">
+            Inequality:{" "}
+            <span className="font-mono">{currentQuestion.inequality}</span>
+          </div>
+        )}
         <div className="text-lg text-gray-800">
           Answer:{" "}
           <span className="font-mono">{currentQuestion.answer.value}</span>
         </div>
       </div>
 
-      {/* Buttons section */}
       <div className="flex justify-between mb-6">
         <div className="flex space-x-3">
           <button
@@ -427,7 +515,6 @@ const InteractiveNumberLine = () => {
         </div>
       </div>
 
-      {/* Feedback section */}
       {feedback && (
         <div
           className={`mb-6 p-4 rounded-lg text-center ${
@@ -440,64 +527,25 @@ const InteractiveNumberLine = () => {
         </div>
       )}
 
-      {/* Number line SVG */}
       <div className="mb-6 relative">
         <svg
           ref={svgRef}
-          width={width}
-          height={height}
+          width={dimensions.width}
+          height={dimensions.height}
           onMouseDown={handleMouseDown}
           className="bg-gray-50 rounded-lg border border-gray-300 cursor-crosshair"
         >
-          {/* Number line base */}
           <line
             x1={0}
             y1={centerY}
-            x2={width}
+            x2={dimensions.width}
             y2={centerY}
             stroke="black"
             strokeWidth="2"
           />
 
-          {/* Tick marks and labels */}
-          {Array.from({ length: 21 }, (_, i) => {
-            const value = -10 + i;
-            const x = toSvgX(value);
-            return (
-              <g key={`tick-${value}`}>
-                <line
-                  x1={x}
-                  y1={centerY - (value % 2 === 0 ? 10 : 5)}
-                  x2={x}
-                  y2={centerY + (value % 2 === 0 ? 10 : 5)}
-                  stroke="black"
-                  strokeWidth="1"
-                />
-                {/* {[1, 2, 3, 4, 5, 6, 7].fill(value) && (
-                  <circle
-                    cx={x}
-                    cy={centerY - 18}
-                    r={6}
-                    fill="#fbbf24"
-                    stroke="#b45309"
-                    strokeWidth={2}
-                  />
-                )} */}
-                {value % 1 === 0 && (
-                  <text
-                    x={x}
-                    y={centerY + 25}
-                    textAnchor="middle"
-                    fontSize="12"
-                  >
-                    {value}
-                  </text>
-                )}
-              </g>
-            );
-          })}
+          {renderTicks()}
 
-          {/* Lines */}
           {lines.map(([start, end], i) => (
             <line
               key={`line-${i}`}
@@ -510,7 +558,6 @@ const InteractiveNumberLine = () => {
             />
           ))}
 
-          {/* Points */}
           {points.map((point, i) => (
             <circle
               key={`point-${i}`}
@@ -524,7 +571,6 @@ const InteractiveNumberLine = () => {
             />
           ))}
 
-          {/* Endpoints */}
           {lines.map(([start, end], index) => {
             const startKey = `${index}-start`;
             const endKey = `${index}-end`;
@@ -556,12 +602,10 @@ const InteractiveNumberLine = () => {
           })}
         </svg>
         <div className="absolute top-0 right-0 p-2 text-sm text-gray-500">
-          Click to place points, click points to connect, click endpoints to
-          toggle open/closed
+          Click on numbers to select points
         </div>
       </div>
 
-      {/* Current elements section */}
       <div className="mb-6 bg-gray-50 p-4 rounded-lg">
         <h3 className="text-xl font-semibold text-gray-800 mb-2">
           Current Elements:
@@ -596,7 +640,6 @@ const InteractiveNumberLine = () => {
         )}
       </div>
 
-      {/* Progress stats section */}
       <div className="mb-6 bg-gray-50 p-4 rounded-lg">
         <h3 className="text-xl font-semibold text-gray-800 mb-2">
           Progress Stats
@@ -631,7 +674,6 @@ const InteractiveNumberLine = () => {
         </div>
       </div>
 
-      {/* Reset modal */}
       {showResetModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
           <div className="bg-white p-6 rounded-lg shadow-lg">
