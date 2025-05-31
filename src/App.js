@@ -50,6 +50,7 @@ import QuizManager from "./pages/QuizManager.js";
 import MathEditor from "./editor/MathEditor.js";
 import EditorWithMathRenderer from "./editor/EditorWithMathRenderer.js";
 import Math from "./editor/Math.js";
+import InteractiveNumberLine from "./components/InteractiveNumberLine.js";
 
 // Create a wrapper component to use useLocation
 const HeaderWrapper = () => {
@@ -80,6 +81,7 @@ function App() {
             <HeaderWrapper />
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/numline" element={<InteractiveNumberLine />} />
               {/* <Route path="/editor" element={<MathEditor />} /> */}
               <Route path="/editor" element={<EditorWithMathRenderer />} />
               <Route path="/math-quiz" element={<Math />} />
