@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import DOMPurify from "dompurify";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
@@ -8,6 +8,7 @@ import EnglishWordSorting from "./EnglishWordSorting";
 import NumSortingComponent from "./NumSortingComponent";
 import SingleMathQuiz from "../editor/SingleMathQuiz";
 import SingleSelect from "../pages/SingleSelect";
+import PictureAdditionQuiz from "./PictureAdditionQuiz";
 
 const Quiz = () => {
   const navigate = useNavigate();
@@ -48,7 +49,6 @@ const Quiz = () => {
       try {
         const questionsRes = await axios.get(
           `https://ilx-backend.onrender.com/api/questions?lessonId=${lessonId}`
-          // `http://localhost:5000/api/questions?lessonId=${lessonId}`
         );
         console.log("Response from API:", questionsRes.data);
         const fetchedQuestions = questionsRes.data;
@@ -90,6 +90,10 @@ const Quiz = () => {
       return Array(nullCount).fill("");
     } else if (question.type === "blank-answer") {
       return question.sequence.filter((n) => n === null).map(() => "");
+    } else if (question.type === "picture-addition") {
+      return "";
+    } else if (question.type === "table-quiz") {
+      return null; // Initialize as null to match TableQuiz's selectedOption state
     }
     return "";
   };
@@ -136,6 +140,12 @@ const Quiz = () => {
     setFilledSequences([]);
   };
 
+  const ansInput = useCallback((inputElement) => {
+    if (inputElement) {
+      inputElement.focus();
+    }
+  }, []);
+
   const handleSequenceOptionClick = (option) => {
     const prevSequenceAnswers =
       userAnswers[question._id] || initializeUserAnswer(question);
@@ -166,7 +176,6 @@ const Quiz = () => {
     });
     setMathSubmitted(true);
 
-    // Provide feedback and move to next question if all correct
     if (correctCount === inputs.length) {
       setFeedback({
         ...feedback,
@@ -196,8 +205,52 @@ const Quiz = () => {
     setMathScore({ correct: 0, total: 0, percentage: 0 });
   };
 
+  // Handler for TableQuiz answer submission
+  const handleTableQuizAnswer = (isCorrect, questionId, feedbackMessage) => {
+    console.log("handleTableQuizAnswer:", {
+      isCorrect,
+      questionId,
+      feedbackMessage,
+    });
+    setUserAnswers((prev) => {
+      const newAnswers = {
+        ...prev,
+        [questionId]: isCorrect ? "correct" : "incorrect",
+      };
+      console.log("Updated userAnswers:", newAnswers);
+      return newAnswers;
+    });
+    setFeedback((prev) => {
+      const newFeedback = { ...prev, [questionId]: String(feedbackMessage) };
+      console.log("Updated feedback:", newFeedback);
+      return newFeedback;
+    });
+
+    const handleAnswer = (isCorrect, questionId) => {
+      console.log("handleAnswer called with:", { isCorrect, questionId });
+    };
+
+    if (isCorrect) {
+      setShowQuestion(false);
+      setTimeout(() => {
+        if (currentQuestionIndex < questions.length - 1) {
+          setCurrentQuestionIndex((prev) => prev + 1);
+          setShowQuestion(true);
+          setFeedback((prev) => ({
+            ...prev,
+            [questions[currentQuestionIndex + 1]?._id]: "",
+          }));
+        } else {
+          setFeedback((prev) => ({
+            ...prev,
+            [questionId]: "✅ Correct! Quiz completed!",
+          }));
+        }
+      }, 1500);
+    }
+  };
+
   useEffect(() => {
-    // Reset all relevant states when question changes
     setFilledSequences([]);
     setFeedback((prev) => ({ ...prev, [question?._id]: "" }));
     setMathSubmitted(false);
@@ -261,6 +314,8 @@ const Quiz = () => {
         sequenceAnswers.every(
           (value, idx) => value && parseInt(value, 10) === correctAnswers[idx]
         );
+    } else if (question.type === "picture-addition") {
+      isCorrect = parseInt(userInput) === question.number1 + question.number2;
     } else {
       const normalizedUser = String(userInput || "")
         .trim()
@@ -287,6 +342,10 @@ const Quiz = () => {
       ? `❌ Incorrect, the correct answers are ${question.correctAnswers.join(
           " and "
         )}. You entered: ${(userInput || []).join(", ")}`
+      : question.type === "picture-addition"
+      ? `❌ Incorrect, the correct answer is ${
+          question.number1 + question.number2
+        }. You entered: ${userInput || ""}`
       : question.correctAnswers
       ? `❌ Incorrect, the correct answers are ${question.correctAnswers.join(
           ", "
@@ -335,7 +394,12 @@ const Quiz = () => {
               },
             }}
             onNext={(isCorrect) => {
-              setUserAnswers({ ...userAnswers, [question._id]: isCorrect });
+              const answer = isCorrect ? "correct" : "incorrect";
+              setUserAnswers({ ...userAnswers, [question._id]: answer });
+              setFeedback({
+                ...feedback,
+                [question._id]: isCorrect ? "✅ Correct!" : "❌ Incorrect!",
+              });
               if (isCorrect) {
                 setShowQuestion(false);
                 setTimeout(() => {
@@ -348,7 +412,6 @@ const Quiz = () => {
             }}
           />
         );
-
       case "TEST":
         return (
           <SingleMathQuiz
@@ -361,6 +424,7 @@ const Quiz = () => {
             score={mathScore}
           />
         );
+
       case "num-sort":
         return (
           <NumSortingComponent
@@ -395,6 +459,7 @@ const Quiz = () => {
             }}
           />
         );
+
       case "english":
         return (
           <>
@@ -455,6 +520,7 @@ const Quiz = () => {
             />
           </>
         );
+
       case "reasoning":
       case "single-select":
         return (
@@ -625,7 +691,10 @@ const Quiz = () => {
                     .map((_, index) => (
                       <input
                         key={index}
-                        type="text"
+                        ref={ansInput}
+                        autoFocus={index === 0}
+                        onFocus={(e) => e.target.select()}
+                        type="number"
                         value={(userAnswers[question._id] || [])[index] || ""}
                         onChange={(e) => handleAnswerChange(e, index)}
                         className="w-16 mx-1 p-1 border border-gray-300 rounded text-center focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -647,7 +716,10 @@ const Quiz = () => {
                     return (
                       <input
                         key={index}
-                        type="text"
+                        type="number"
+                        ref={ansInput}
+                        autoFocus={index === 0}
+                        onFocus={(e) => e.target.select()}
                         value={
                           (userAnswers[question._id] || [])[nullIndex] || ""
                         }
@@ -759,7 +831,9 @@ const Quiz = () => {
                             return (
                               <input
                                 key={idx}
-                                type="text"
+                                type="number"
+                                ref={ansInput}
+                                onFocus={(e) => e.target.select()}
                                 value={sequenceAnswers[nullIndex] || ""}
                                 onChange={(e) =>
                                   handleSequenceInputChange(
@@ -793,6 +867,9 @@ const Quiz = () => {
                               <span key={index} className="mx-1">
                                 <input
                                   type="text"
+                                  ref={ansInput}
+                                  autoFocus={index === 0}
+                                  onFocus={(e) => e.target.select()}
                                   value={sequenceAnswers[nullIndex] || ""}
                                   onChange={(e) =>
                                     handleSequenceInputChange(
@@ -853,6 +930,238 @@ const Quiz = () => {
           </>
         );
 
+      case "picture-addition":
+        return (
+          <PictureAdditionQuiz
+            question={question}
+            onAnswer={(isCorrect) => {
+              setUserAnswers({
+                ...userAnswers,
+                [question._id]: isCorrect
+                  ? String(question.number1 + question.number2)
+                  : userAnswers[question._id] || "",
+              });
+              const feedbackMessage = isCorrect
+                ? "✅ Correct!"
+                : `❌ Incorrect, the correct answer is ${
+                    question.number1 + question.number2
+                  }.`;
+              setFeedback({ ...feedback, [question._id]: feedbackMessage });
+
+              if (isCorrect) {
+                setShowQuestion(false);
+                setTimeout(() => {
+                  if (currentQuestionIndex < questions.length - 1) {
+                    setCurrentQuestionIndex((prev) => prev + 1);
+                    setShowQuestion(true);
+                    setFeedback({
+                      ...feedback,
+                      [questions[currentQuestionIndex + 1]?._id]: "",
+                    });
+                  } else {
+                    setFeedback({
+                      ...feedback,
+                      [question._id]: "✅ Correct! Quiz completed!",
+                    });
+                  }
+                }, 1500);
+              }
+            }}
+            onReset={() => {
+              setFeedback({ ...feedback, [question._id]: "" });
+              setUserAnswers({ ...userAnswers, [question._id]: "" });
+            }}
+          />
+        );
+
+      case "table-quiz":
+        if (
+          !question.tableData ||
+          !Array.isArray(question.tableData) ||
+          question.tableData.length === 0
+        ) {
+          return <p className="text-lg text-red-600">Invalid table data.</p>;
+        }
+        const tableHeaders = Object.keys(question.tableData[0]);
+        // Track answers for each null cell by row/col
+        const tableInputAnswers = userAnswers[question._id] || {}; // { "row-col": value }
+        // Find all null cells for validation
+        const nullCells = [];
+        question.tableData.forEach((row, rowIndex) => {
+          tableHeaders.forEach((key, colIndex) => {
+            if (row[key] === null) {
+              nullCells.push({ rowIndex, colIndex, key });
+            }
+          });
+        });
+
+        // Helper to check if all null cells are filled
+        const allNullsFilled = nullCells.every(
+          ({ rowIndex, colIndex }) =>
+            tableInputAnswers[`${rowIndex}-${colIndex}`] !== undefined &&
+            tableInputAnswers[`${rowIndex}-${colIndex}`] !== ""
+        );
+
+        // Validate answers for this object structure
+        const handleTableSubmit = () => {
+          let isCorrect = true;
+          let userInputSummary = [];
+          nullCells.forEach(({ rowIndex, colIndex, key }) => {
+            const userVal = tableInputAnswers[`${rowIndex}-${colIndex}`];
+            // For this structure, correct answer is in question.correctAnswer
+            const correctVal = question.correctAnswer;
+            userInputSummary.push(userVal);
+            if (
+              correctVal === undefined ||
+              String(userVal).trim() !== String(correctVal).trim()
+            ) {
+              isCorrect = false;
+            }
+          });
+
+          const feedbackMessage = isCorrect
+            ? "✅ Correct!"
+            : `❌ Incorrect, the correct answer is ${
+                question.correctAnswer
+              }. You entered: ${userInputSummary.join(", ")}`;
+
+          setFeedback({ ...feedback, [question._id]: feedbackMessage });
+
+          if (isCorrect) {
+            setShowQuestion(false);
+            setTimeout(() => {
+              if (currentQuestionIndex < questions.length - 1) {
+                setCurrentQuestionIndex((prev) => prev + 1);
+                setShowQuestion(true);
+                setFeedback({
+                  ...feedback,
+                  [questions[currentQuestionIndex + 1]?._id]: "",
+                });
+              } else {
+                setFeedback({
+                  ...feedback,
+                  [question._id]: "✅ Correct! Quiz completed!",
+                });
+              }
+            }, 1500);
+          }
+        };
+
+        return (
+          <div className="question-container">
+            <style>{`
+          .quiz-table {
+            font-size: 0.85rem;
+            width: auto;
+            min-width: unset;
+            max-width: 450px;
+            margin: 0 auto;
+            border-collapse: collapse;
+            justify-content: left;
+          }
+          .quiz-table th,
+          .quiz-table td {
+            padding: 0.25rem 0.5rem;
+            border: 1px solid #d1d5db;
+            text-align: center;
+            min-width: auto;
+            max-width: auto;
+            height: 32px;
+          }
+          .quiz-table th {
+            background: #f3f4f6;
+            font-weight: 600;
+          }
+          .quiz-table input[type="text"] {
+            width: 40px;
+            height: 24px;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 0.85rem;
+            padding: 0 0.25rem;
+          }
+        `}</style>
+            <div className="text-section mb-4">
+              <h2 className="text-base font-semibold">{question.title}</h2>
+              <h3 className="text-sm">{question.question}</h3>
+            </div>
+            <table className="quiz-table mb-4">
+              <thead>
+                <tr>
+                  {tableHeaders.map((key, index) => (
+                    <th key={index}>{`Number of ${key}`}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {question.tableData.map((row, rowIndex) => (
+                  <tr key={rowIndex}>
+                    {tableHeaders.map((key, colIndex) => (
+                      <td key={colIndex}>
+                        {row[key] === null ? (
+                          <input
+                            type="text"
+                            value={
+                              tableInputAnswers[`${rowIndex}-${colIndex}`] || ""
+                            }
+                            onChange={(e) => {
+                              setUserAnswers((prev) => ({
+                                ...prev,
+                                [question._id]: {
+                                  ...(prev[question._id] || {}),
+                                  [`${rowIndex}-${colIndex}`]: e.target.value,
+                                },
+                              }));
+                              setFeedback({ ...feedback, [question._id]: "" });
+                            }}
+                            aria-label={`Input for row ${
+                              rowIndex + 1
+                            }, column ${key}`}
+                          />
+                        ) : (
+                          row[key]
+                        )}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            <div className="flex justify-between mt-6">
+              <button
+                onClick={handleTableSubmit}
+                disabled={!allNullsFilled}
+                className={`
+          px-4 py-1 rounded text-white font-semibold text-sm transition
+          ${
+            allNullsFilled
+              ? "bg-green-500 hover:bg-green-600"
+              : "bg-gray-400 cursor-not-allowed"
+          }
+        `}
+                aria-label="Submit answer"
+                type="button"
+              >
+                Submit
+              </button>
+              <button
+                onClick={goToNextQuestion}
+                disabled={currentQuestionIndex === questions.length - 1}
+                className={`px-4 py-1 rounded text-white font-semibold text-sm transition ${
+                  currentQuestionIndex === questions.length - 1
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-blue-500 hover:bg-blue-600"
+                }`}
+                aria-label="Next question"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        );
+
       default:
         return <p className="text-lg">Unsupported question type.</p>;
     }
@@ -860,8 +1169,6 @@ const Quiz = () => {
 
   const allInputsFilled = () => {
     if (question?.type === "math-quiz") {
-      // For math quiz, we don't need to check if all inputs are filled
-      // because the submit button is handled by the SingleMathQuiz component
       return false;
     } else if (question?.type === "sequence") {
       const sequenceAnswers =
@@ -881,10 +1188,23 @@ const Quiz = () => {
       const sequenceAnswers =
         userAnswers[question._id] || initializeUserAnswer(question);
       return sequenceAnswers.every((val) => val && val.trim() !== "");
+    } else if (question?.type === "picture-addition") {
+      return (
+        userAnswers[question._id] !== undefined &&
+        userAnswers[question._id] !== ""
+      );
+    } else if (question?.type === "table-quiz") {
+      return (
+        userAnswers[question._id] !== undefined &&
+        userAnswers[question._id] !== null &&
+        typeof userAnswers[question._id] !== "object" &&
+        userAnswers[question._id] !== ""
+      );
     }
     return (
       userAnswers[question?._id] !== undefined &&
-      userAnswers[question?._id] !== ""
+      userAnswers[question?._id] !== "" &&
+      typeof userAnswers[question._id] !== "object"
     );
   };
 
@@ -952,13 +1272,19 @@ const Quiz = () => {
 
         <div>
           {showQuestion &&
-            !["english", "num-sort", "TEST", "SINGLE_SELECT"].includes(
-              question?.type
-            ) && (
-              <button
-                onClick={checkAnswer}
-                disabled={!allInputsFilled()}
-                className={`
+            ![
+              "english",
+              "num-sort",
+              "TEST",
+              "SINGLE_SELECT",
+              "picture-addition",
+              "table-quiz",
+            ].includes(question?.type) && (
+              <div className="flex justify-between mt-6">
+                <button
+                  onClick={checkAnswer}
+                  disabled={!allInputsFilled()}
+                  className={`
                   mt-4 px-6 py-2 rounded text-white font-semibold transition
                   ${
                     allInputsFilled()
@@ -966,52 +1292,38 @@ const Quiz = () => {
                       : "bg-gray-400 cursor-not-allowed"
                   }
                 `}
-                aria-label="Submit answer"
-                type="button"
-              >
-                Submit
-              </button>
+                  aria-label="Submit answer"
+                  type="button"
+                >
+                  Submit
+                </button>
+                <button
+                  onClick={goToNextQuestion}
+                  disabled={currentQuestionIndex === questions.length - 1}
+                  className={`px-6 py-2 rounded text-white font-semibold transition ${
+                    currentQuestionIndex === questions.length - 1
+                      ? "bg-gray-400 cursor-not-allowed"
+                      : "bg-blue-500 hover:bg-blue-600"
+                  }`}
+                  aria-label="Next question"
+                >
+                  Next
+                </button>
+              </div>
             )}
         </div>
-        {feedback[question?._id] && (
-          <p
-            className={`mt-4 text-lg ${
-              feedback[question?._id].startsWith("✅")
-                ? "text-green-600"
-                : "text-red-600"
-            }`}
-          >
-            {feedback[question?._id]}
-          </p>
-        )}
-        {showQuestion && !["SINGLE_SELECT"].includes(question?.type) && (
-          <div className="mt-6 flex gap-4">
-            <button
-              onClick={goToPreviousQuestion}
-              disabled={currentQuestionIndex === 0}
-              className={`px-6 py-2 rounded text-white font-semibold transition ${
-                currentQuestionIndex === 0
-                  ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-blue-500 hover:bg-blue-600"
+        {feedback[question?._id] &&
+          typeof feedback[question._id] === "string" && (
+            <p
+              className={`mt-4 text-lg ${
+                feedback[question._id].startsWith("✅")
+                  ? "text-green-600"
+                  : "text-red-600"
               }`}
-              aria-label="Previous question"
             >
-              Previous
-            </button>
-            <button
-              onClick={goToNextQuestion}
-              disabled={currentQuestionIndex === questions.length - 1}
-              className={`px-6 py-2 rounded text-white font-semibold transition ${
-                currentQuestionIndex === questions.length - 1
-                  ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-blue-500 hover:bg-blue-600"
-              }`}
-              aria-label="Next question"
-            >
-              Next
-            </button>
-          </div>
-        )}
+              {feedback[question._id]}
+            </p>
+          )}
       </div>
     </div>
   );
