@@ -227,6 +227,7 @@ export default function KidFriendlyPage() {
 
     if (isCorrect) {
       setScore((prev) => prev + 1);
+      generateNewQuestion()
     }
     setTotalQuestions((prev) => prev + 1);
     setShowResult(true);
